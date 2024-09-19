@@ -5,24 +5,16 @@
 
 #define MAX_CHARACTERE 50
 #define MAX_DESCRIPTION 500
-#define MAX_STATUS 10
+#define MAX_STATUS 20
+#define MAX_DATE 12
 
 typedef struct {
-
     char id[MAX_CHARACTERE];
     char Nom[MAX_CHARACTERE];
     char Email[MAX_CHARACTERE]; 
     char Password[MAX_CHARACTERE];
     int  Role;
-
 }Utilisateurs;
-
-typedef struct {
-    int jour;
-    int mois;
-    int annee;
-
-}Date;
 
 typedef struct 
 {
@@ -30,36 +22,49 @@ typedef struct
     char Motif[MAX_CHARACTERE];
     char Description[MAX_DESCRIPTION];
     char Categorie[MAX_CHARACTERE];
-    char Status[MAX_CHARACTERE];
-    int index;
-    Date date;
-
+    char Status[MAX_STATUS];
+    char date[MAX_DATE];
+    int priorite;         
+    int id_client; 
+   
 }Reclamation;
 
 Utilisateurs *user = NULL;
 Reclamation *rec = NULL;
+
 int Taille = 0;
 int R_Taille = 0;
+int index_user = -1;
 
 int Incription();
 int Connexion();
+int Choix(int *choix);
+
+// Les Fonction de Reclamation 
+void Afficher_tout_les_Reclamation();
+int Ajouter_un_Reclamation();
+int Modifier_un_Reclamation();
+int Supprimer_un_Reclamation();
 
 int main(){
 
-    int auth , choix = 0 , index_user;
+    printf("\n\t ---  Bienvenu a L'application ---\n");
+    int auth = -1 , choix = 0  , r_choix = 0;
 
     user = malloc(Taille*sizeof(Utilisateurs));
     rec = malloc(Taille*sizeof(Reclamation));
 
-    while(auth != 0){
+    while(1){
 
-        printf("\n\t ---  Bienvenu a L'application ---\n");
-        printf("\n\t --- 1. Inscription ---\n");
-        printf("\n\t --- 2. Connexion ---\n");
-        printf("\n\t --- 0. Quitter ---\n");
-        printf("\n\t -- Tapez Votre Choix :  ");
-        scanf("%d" , &auth);
-        while(getchar()  != '\n'); 
+        while(auth != 0){
+
+        // Authentification ---------------------- 
+            printf("\n\t --- 1. Inscription ---\n");
+            printf("\n\t --- 2. Connexion ---\n");
+            printf("\n\t --- 0. Quitter ---\n");
+            printf("\n\t -- Tapez Votre Choix :  ");
+            scanf("%d" , &auth);
+            while(getchar()  != '\n'); 
 
         switch (auth)
         {
@@ -74,7 +79,8 @@ int main(){
                 break;
             case 2 :
                 int index = Connexion();
-                if(index != 0){
+                printf("\n\t --- Index  : %d \n" , index);
+                if(index >= 0){
                     printf("\n\t \x1b[32m--- Connexion Reussite ---\x1b[0m\n");
                     index_user = index;
                     auth = 0;
@@ -90,40 +96,62 @@ int main(){
     
     }
 
+
     while(1){
 
-        int valid_choix = Choix(&choix);
+        int valid_choix = Choix(&r_choix);
 
-        if (valid_choix == 0 || choix < 1 || choix > 5){
+        if (valid_choix == 0 || r_choix < 1 || r_choix > 5){
             printf("\n\t \x1b[31m---- Choix Invalid ----\x1b[0m \n");
         }else {
 
-             switch (choix){
+             switch (r_choix){
 
-                case 1 :
-                    /* code */
+                case 1:
+                    int valid_Ajoute = Ajouter_un_Reclamation();
+                    if(valid_Ajoute){
+                        printf("\n\t \x1b[32m--- Le Contact a ete Ajoute avec Succes ----\x1b[0m \n");
+                        R_Taille++;
+                    }else{
+                        printf("\n\t \x1b[31m--- Erreur d'ajoutr ----\x1b[0m \n");
+                    }
+                break;
+                case 2:
+                    Afficher_tout_les_Reclamation();
+                    break;
+                case 3 :
+                    break;
+                case 4 :
+                    break;
+                case 5 :
+                    auth = -1;
                     break;
                 
                 default:
                     break;
             }
         }
+
+        if(auth != 0) break;
     
+        }
     }
+
+    
 }
 
 
 int Choix(int *choix){
-    int ch; 
+    int ch;
     printf("\n"
                "\t==============================================\n\t"
                "|          \033[36mMenu d\'application\033[0m                |\n"
                "\t==============================================\n\t"
-               "|\t[1] Faire une Reclamation            |\n\t"
+               "|\t[1] Ajouter une Reclamation          |\n\t"
                "|\t[2] Afficher tout les Reclamation    |\n\t"
                "|\t[3] Modifier un Reclamation          |\n\t"
                "|\t[4] Supprimer un Reclamation         |\n\t"
-               "|\t[\033[33m5\033[0m] \033[33mQuitter\033[0m                          |\n"
+               "|\t[\033[33m5\033[0m] \033[33mDeconnecter\033[0m                      |\n"
                "\t==============================================\n\t"
                "\n\tTapez votre choix [1-5] : ");
                ch = scanf("%d", choix);
@@ -131,6 +159,7 @@ int Choix(int *choix){
                if(ch) return ch;
                else return 0;
 }
+
 
 int Incription(){
 
@@ -286,10 +315,9 @@ int Connexion(){
     char Password[MAX_CHARACTERE];
 
     // Validation de nom -------
-    int nom_count = 0  , index;
+    int nom_count = 0;
     while(1){
-
-        int valid_nom = 0 , valid_password = 0;
+        int valid_nom = 0 , valid_password = 0 , index = 0;
         printf("\n\t -- Nom d'utilisateur : ");
         scanf(" %[^\n]s" , Nom);
 
@@ -302,6 +330,7 @@ int Connexion(){
                 if(strcmp(user[i].Password , Password) == 0){
                     valid_password = 1;
                     index = i;
+                    break;
                 }
             }
         }
@@ -319,4 +348,138 @@ int Connexion(){
         }
     }
 
+}
+
+// Relamation
+void Afficher_tout_les_Reclamation(){
+
+    if(rec == NULL || R_Taille  == 0 ){
+        printf("\n\t \x1b[31m---- Aucun Reclamation a Afficher ----\x1b[0m\n");
+        return; 
+    }
+
+    int i , exist = 0;
+    for(int i=0;i<R_Taille;i++){
+        if(rec[i].id_client == index_user){
+            printf("\n\t \x1b[32m------ Reclamation %d ------\x1b[0m\n\n" , i+1);
+            printf("\t -- iD          : %s\n" , rec[i].id);
+            printf("\t -- Motif       : %s\n" , rec[i].Motif);
+            printf("\t -- Catgorie    : %s\n" , rec[i].Categorie);
+            printf("\t -- Status      : %s\n" , rec[i].Status);
+            printf("\t -- Description : %s\n" , rec[i].Description);
+            printf("\t -- Date        : %s\n" , rec[i].date);
+            exist = 1;
+        }
+    }
+
+    if(exist == 0) printf("\n\t \x1b[31m---- Aucun Reclamation a Afficher ----\x1b[0m\n");
+    
+    
+}
+
+int Ajouter_un_Reclamation(){
+
+    int i;
+    rec = realloc(rec , (R_Taille + 1)*sizeof(Reclamation));
+
+    if(rec == NULL){
+        printf("\n\t \x1b[31m--- Erreur D'allocation ----\x1b[0m\n");
+        return 0;
+    }
+
+    Reclamation reclamation;
+    
+    printf("\n\t \x1b[32m---- Ajouter un Reclamation ----\x1b[0m \n");
+ 
+    // generer L'id ----------- 
+    srand(time(NULL));
+    while(1){
+
+        int counter= 0 , i;  
+        char Generate_id[100];
+
+        for(i=0;counter<100;i++){
+            char random = 48 + (rand() % 74);
+            if( (random >= 48 && random <= 57 ) || (random >= 65 && random <= 90 ) || (random >= 97 && random <= 122 )){
+                Generate_id[i] = random; 
+                counter++;      
+                
+            }
+        }
+
+        Generate_id[i] = '\0';
+
+        int exist = 1;
+        for(i=0;i<R_Taille;i++){
+            if(strcmp(reclamation.id,Generate_id) == 0) exist = 0;
+        }
+
+        if(exist && strlen(Generate_id) > 10 ){
+            strncpy(reclamation.id , Generate_id , 10);
+            break;
+        }
+    }
+    
+    // Validation de motif -------
+    int Motif_count = 0;
+    while(1){
+        printf("\n\t -- Le Motif de la Reclamation : ");
+        int valide_input = scanf(" %[^\n]s" , reclamation.Motif);
+
+        if(valide_input && strlen(reclamation.Motif) > 3){
+            break;
+        }else if(Motif_count > 2){
+            return 0;
+        }else{
+            Motif_count++;
+            printf("\n\t \x1b[31m-- Invalid Motif --\x1b[0m \n");
+        }
+    }
+
+    // Validation de description -------
+    int Description_count = 0;
+    while(1){
+        printf("\n\t -- La Description de la Reclamation : ");
+        int valide_input = scanf(" %[^\n]s" , reclamation.Description);
+
+        if(valide_input && strlen(reclamation.Description) > 3){
+            break;
+        }else if(Description_count > 2){
+            return 0;
+        }else{
+            Description_count++;
+            printf("\n\t \x1b[31m-- Invalid Description --\x1b[0m \n");
+        }
+    }
+
+    // Validation de Categorie -------
+    int Categorie_count = 0;
+    while(1){
+        printf("\n\t -- La Categorie de la Reclamation : ");
+        int valide_input = scanf(" %[^\n]s" , reclamation.Categorie);
+
+        if(valide_input && strlen(reclamation.Categorie) > 3){
+            break;
+        }else if(Categorie_count > 2){
+            return 0;
+        }else{
+            Categorie_count++;
+            printf("\n\t \x1b[31m-- Invalid Categorie --\x1b[0m \n");
+        }
+    }
+
+    // Validation de Status -------
+    strcpy(reclamation.Status , "en cours");
+
+    // Validation de La Date
+    time_t t = time(NULL);
+    struct tm tm = *localtime(&t);
+    strftime(reclamation.date, 100, "%d-%m-%Y %H:%M:%S", &tm);
+
+    // id_clien
+    reclamation.id_client = index_user; 
+
+    rec[R_Taille] = reclamation;
+
+    return 1;
 }
