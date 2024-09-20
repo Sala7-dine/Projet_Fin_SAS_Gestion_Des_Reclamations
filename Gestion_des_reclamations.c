@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <windows.h>
 #include <string.h>
 #include <time.h>
+#include <stdbool.h>
 
 #define MAX_CHARACTERE 50
 #define MAX_DESCRIPTION 500
@@ -56,8 +58,9 @@ int main(){
 
     while(1){
 
-        while(auth != 0){
+        int connect = 0;
 
+        do{
         // Authentification ---------------------- 
             printf("\n\t --- 1. Inscription ---\n");
             printf("\n\t --- 2. Connexion ---\n");
@@ -74,6 +77,7 @@ int main(){
                     printf("\n\t \x1b[32m--- Inscription Reussite ---\x1b[0m\n");
                     index_user = Taille;
                     Taille++;
+                    connect = 1;
                     auth = 0;
                 } else printf("\n\t --- Inscription Invalid --- \n");
                 break;
@@ -83,21 +87,24 @@ int main(){
                 if(index >= 0){
                     printf("\n\t \x1b[32m--- Connexion Reussite ---\x1b[0m\n");
                     index_user = index;
+                    connect = 1;
                     auth = 0;
                 } 
-                else printf("\n\t --- Erreur Lors de Connexion --- \n");
+                else {
+                    printf("\n\t \x1b[31m--- Erreur Lors de Connexion ---\x1b[0m \n");
+                } 
                 break;
         
         default:
-
-            printf("\n\t --- Invalide Choix --- \n");
             break;
+
         }
     
-    }
+    }while(auth != 0);
 
 
-    while(1){
+    if(connect){
+         while(1){
 
         int valid_choix = Choix(&r_choix);
 
@@ -120,8 +127,22 @@ int main(){
                     Afficher_tout_les_Reclamation();
                     break;
                 case 3 :
+                    int valid_mod = Modifier_un_Reclamation();
+                    if(valid_mod){
+                        printf("\n\t \x1b[32m--- La Reclamation a ete Modifiier avec Succes ----\x1b[0m \n");
+                    }else{
+                        printf("\n\t \x1b[31m--- Erreur lors de Modification ----\x1b[0m \n");
+                    }
                     break;
                 case 4 :
+                    int valid_sup = Supprimer_un_Reclamation();
+                    if(valid_sup == 1){
+                        printf("\n\t \x1b[32m--- La Reclamation a ete Supprimer avec Succes ----\x1b[0m \n");
+                    }else if(valid_sup == 2){
+                        printf("\n\t \x1b[33m--- Aucun Recalamtion a Supprimer --- \x1b[0m\n");
+                    }else{
+                        printf("\n\t \x1b[31m--- Erreur lors de Suppression ----\x1b[0m \n");
+                    }
                     break;
                 case 5 :
                     auth = -1;
@@ -136,10 +157,8 @@ int main(){
     
         }
     }
-
-    
+    }
 }
-
 
 int Choix(int *choix){
     int ch;
@@ -337,14 +356,11 @@ int Connexion(){
 
         if(valid_nom && valid_password){
             return index;
-        }else if(nom_count > 5){
-            return 0;
-        }else if(valid_nom == 0) {
+        }else if(nom_count > 2){
+            return -1;
+        }else if(valid_nom == 0 || valid_password == 0) {
             nom_count++;
-            printf("\n\t \x1b[33m-- Nom n'est pas exist --\x1b[0m \n");
-        }else if(valid_password == 0) {
-            nom_count++;
-            printf("\n\t \x1b[33m-- Invalid mot de pass --\x1b[0m \n");
+            printf("\n\t \x1b[33m-- Nom ou mot de passe incorrect --\x1b[0m \n");
         }
     }
 
@@ -358,10 +374,10 @@ void Afficher_tout_les_Reclamation(){
         return; 
     }
 
-    int i , exist = 0;
+    int i , exist = 0 , index = 1;
     for(int i=0;i<R_Taille;i++){
         if(rec[i].id_client == index_user){
-            printf("\n\t \x1b[32m------ Reclamation %d ------\x1b[0m\n\n" , i+1);
+            printf("\n\t \x1b[32m------ Reclamation %d ------\x1b[0m\n\n" , index);
             printf("\t -- iD          : %s\n" , rec[i].id);
             printf("\t -- Motif       : %s\n" , rec[i].Motif);
             printf("\t -- Catgorie    : %s\n" , rec[i].Categorie);
@@ -369,6 +385,7 @@ void Afficher_tout_les_Reclamation(){
             printf("\t -- Description : %s\n" , rec[i].Description);
             printf("\t -- Date        : %s\n" , rec[i].date);
             exist = 1;
+            index += 1;
         }
     }
 
@@ -482,4 +499,151 @@ int Ajouter_un_Reclamation(){
     rec[R_Taille] = reclamation;
 
     return 1;
+}
+
+int Modifier_un_Reclamation(){
+
+    // virifier l'dentification existe ou non
+    int mod_count = 0 , pos;
+   
+    while(1){
+        char id[20];
+        bool exist = false;
+        printf("\n\t -- Veuillez Saisir Le identification de Reclamation : ");
+        scanf(" %[^\n]s" , id);
+        while(getchar() != '\n');
+
+        for(int i=0;i<R_Taille;i++){
+            if(strcmp(rec[i].id , id) == 0){
+                exist = true;
+                pos = i;
+                break;
+            }  
+        }
+
+
+        if(exist){
+            break;
+        }else if( mod_count > 2 ) {
+            return 0;
+        }else if (exist == false) {
+            printf("\n\t \x1b[33m--- Reclamation avec cette identification n'est pas exist ----\x1b[0m \n");
+            mod_count++;
+        }else{
+            printf("\n\t \x1b[31m-- Invalid Id --\x1b[0m \n");
+            mod_count++;
+        }
+    }
+
+    Reclamation reclamation;
+
+    printf("\n\t \x1b[32m---- Modifier un Reclamation ----\x1b[0m\n");
+
+
+    // autre champ 
+    strcpy(reclamation.id, rec[pos].id);   
+    strcpy(reclamation.Status, rec[pos].Status);   
+    strcpy(reclamation.date, rec[pos].date);   
+    reclamation.id_client = index_user;
+
+    // Validation de motif -------
+    int Motif_count = 0;
+    while(1){
+        printf("\n\t -- Le Motif de la Reclamation : ");
+        int valide_input = scanf(" %[^\n]s" , reclamation.Motif);
+
+        if(valide_input && strlen(reclamation.Motif) > 3){
+            break;
+        }else if(Motif_count > 2){
+            return 0;
+        }else{
+            Motif_count++;
+            printf("\n\t \x1b[31m-- Invalid Motif --\x1b[0m \n");
+        }
+    }
+
+    // Validation de description -------
+    int Description_count = 0;
+    while(1){
+        printf("\n\t -- La Description de la Reclamation : ");
+        int valide_input = scanf(" %[^\n]s" , reclamation.Description);
+
+        if(valide_input && strlen(reclamation.Description) > 3){
+            break;
+        }else if(Description_count > 2){
+            return 0;
+        }else{
+            Description_count++;
+            printf("\n\t \x1b[31m-- Invalid Description --\x1b[0m \n");
+        }
+    }
+
+    // Validation de Categorie -------
+    int Categorie_count = 0;
+    while(1){
+        printf("\n\t -- La Categorie de la Reclamation : ");
+        int valide_input = scanf(" %[^\n]s" , reclamation.Categorie);
+
+        if(valide_input && strlen(reclamation.Categorie) > 3){
+            break;
+        }else if(Categorie_count > 2){
+            return 0;
+        }else{
+            Categorie_count++;
+            printf("\n\t \x1b[31m-- Invalid Categorie --\x1b[0m \n");
+        }
+    }
+
+
+    rec[pos] = reclamation;
+
+    printf("\n --- id client : %d \n" , rec[pos].id_client); 
+
+    return 1;
+
+}
+
+int Supprimer_un_Reclamation(){
+
+    // virifier l'dentification existe ou non
+    int sup_coount = 0 , pos;
+   
+    while(1){
+        char id[20];
+        bool exist = false;
+        printf("\n\t -- Veuillez Saisir Le identification de Reclamation : ");
+        scanf(" %[^\n]s" , id);
+        while(getchar() != '\n');
+
+        for(int i=0;i<R_Taille;i++){
+            if(strcmp(rec[i].id , id) == 0){
+                exist = true;
+                pos = i;
+                break;
+            }  
+        }
+
+        if(exist){
+            break;
+        }else if( sup_coount > 2 ) {
+            return 0;
+        }else if (exist == false) {
+            printf("\n\t \x1b[33m--- Reclamation avec cette identification n'est pas exist ----\x1b[0m \n");
+            sup_coount++;
+        }else{
+            printf("\n\t \x1b[31m-- Invalid Id --\x1b[0m \n");
+            sup_coount++;
+        }
+    }
+
+    if(R_Taille == 0){
+        return 2;
+    }
+
+    for(int i=pos;i<R_Taille - 1;i++){
+            rec[i] = rec[i+1];
+    }
+    R_Taille--;
+    return 1;
+
 }
