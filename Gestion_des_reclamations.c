@@ -5,6 +5,15 @@
 #include <time.h>
 #include <stdbool.h>
 
+#define RESET   "\x1b[0m"
+#define RED     "\x1b[31m"
+#define GREEN   "\x1b[32m"
+#define YELLOW  "\x1b[33m"
+#define BLUE    "\x1b[34m"
+#define MAGENTA "\x1b[35m"
+#define CYAN    "\x1b[36m"
+#define WHITE   "\x1b[37m"
+
 #define MAX_CHARACTERE 50
 #define MAX_DESCRIPTION 500
 #define MAX_STATUS 20
@@ -24,6 +33,7 @@ typedef struct
     char Motif[MAX_CHARACTERE];
     char Description[MAX_DESCRIPTION];
     char Categorie[MAX_CHARACTERE];
+    char Note[MAX_CHARACTERE];
     char Status[MAX_STATUS];
     char date[MAX_DATE];
     int priorite;         
@@ -40,7 +50,11 @@ int index_user = -1;
 
 int Incription();
 int Connexion();
+
+// Les Menu (Admin / Client / Agent)
 int Choix(int *choix);
+int Choix_Admin(int *choix);
+int Choix_Agent(int *choix);
 
 // Les Fonction de Reclamation 
 void Afficher_tout_les_Reclamation();
@@ -48,10 +62,14 @@ int Ajouter_un_Reclamation();
 int Modifier_un_Reclamation();
 int Supprimer_un_Reclamation();
 
+// Les Fonction de L'admin et L'agent
+int Modifier_Role_Utilisateur();
+int Modifier_Status_Utilisateur();
+
 int main(){
 
     printf("\n\t ---  Bienvenu a L'application ---\n");
-    int auth = -1 , choix = 0  , r_choix = 0;
+    int auth = -1 , choix = 0  , r_choix = 0 , choix_admin = 0 , chix_agent = 0;
 
     user = malloc(Taille*sizeof(Utilisateurs));
     rec = malloc(Taille*sizeof(Reclamation));
@@ -83,7 +101,6 @@ int main(){
                 break;
             case 2 :
                 int index = Connexion();
-                printf("\n\t --- Index  : %d \n" , index);
                 if(index >= 0){
                     printf("\n\t \x1b[32m--- Connexion Reussite ---\x1b[0m\n");
                     index_user = index;
@@ -102,9 +119,8 @@ int main(){
     
     }while(auth != 0);
 
-
-    if(connect){
-         while(1){
+    if(connect && user[index_user].Role == 0){
+        while(1){
 
         int valid_choix = Choix(&r_choix);
 
@@ -156,9 +172,91 @@ int main(){
         if(auth != 0) break;
     
         }
-    }
+    }else if(connect && user[index_user].Role == 1){
+         while(1){
+
+        int valid_choix = Choix_Admin(&choix_admin);
+
+        if (valid_choix == 0 || choix_admin < 1 || choix_admin > 12){
+            printf("\n\t \x1b[31m---- Choix Invalid ----\x1b[0m \n");
+        }else{
+
+             switch (choix_admin){
+
+                case 1:
+                    int valid_Ajoute = Ajouter_un_Reclamation();
+                    if(valid_Ajoute){
+                        printf("\n\t \x1b[32m--- Le Contact a ete Ajoute avec Succes ----\x1b[0m \n");
+                        R_Taille++;
+                    }else{
+                        printf("\n\t \x1b[31m--- Erreur d'ajoutr ----\x1b[0m \n");
+                    }
+                break;
+                case 2:
+
+                    Afficher_tout_les_Reclamation();
+                    break;
+                case 3 :
+                    int valid_mod = Modifier_un_Reclamation();
+                    if(valid_mod){
+                        printf("\n\t \x1b[32m--- La Reclamation a ete Modifiier avec Succes ----\x1b[0m \n");
+                    }else{
+                        printf("\n\t \x1b[31m--- Erreur lors de Modification ----\x1b[0m \n");
+                    }
+                    break;
+                case 4 :
+                    int valid_sup = Supprimer_un_Reclamation();
+                    if(valid_sup == 1){
+                        printf("\n\t \x1b[32m--- La Reclamation a ete Supprimer avec Succes ----\x1b[0m \n");
+                    }else if(valid_sup == 2){
+                        printf("\n\t \x1b[33m--- Aucun Recalamtion a Supprimer --- \x1b[0m\n");
+                    }else{
+                        printf("\n\t \x1b[31m--- Erreur lors de Suppression ----\x1b[0m \n");
+                    }
+                    break;
+                case 5 :
+                        int valid_role = Modifier_Role_Utilisateur();
+                         if(valid_role){
+                            printf("\n\t \x1b[32m--- Le Role D'utilisateur a ete modifier avec succes ----\x1b[0m \n");
+                        }else{
+                            printf("\n\t \x1b[31m--- Erreur lors de Modification de role ----\x1b[0m \n");
+                    }
+                    break;
+                case 6 :
+                        int valid_status = Modifier_Status_Utilisateur();
+                         if(valid_status){
+                            printf("\n\t \x1b[32m--- Le Status de Reclamation a ete modifier avec succes ----\x1b[0m \n");
+                        }else{
+                            printf("\n\t \x1b[31m--- Erreur lors de Modification de Recalamtion ----\x1b[0m \n");
+                    }
+                    break;
+                    break;
+                case 7 :
+                    break;
+                case 8 :
+                    break;
+                case 9 :
+                    break;
+                case 10 :
+                    break;
+                case 11 :
+                    break;
+                case 12 :
+                    auth = -1;
+                    break;
+                
+                default:
+                    break;
+            }
+        }
+
+        if(auth != 0) break;
+    
+        }
     }
 }
+}
+
 
 int Choix(int *choix){
     int ch;
@@ -179,6 +277,65 @@ int Choix(int *choix){
                else return 0;
 }
 
+int Choix_Agent(int *choix){
+    int ch;
+    printf("\n"
+               "\t==============================================\n\t"
+               "|          \033[36mMenu d\'application\033[0m                |\n"
+               "\t==============================================\n\t"
+               "|\t[1] Ajouter une Reclamation          |\n\t"
+               "|\t[2] Afficher tout les Reclamation    |\n\t"
+               "|\t[3] Modifier un Reclamation          |\n\t"
+               "|\t[4] Supprimer un Reclamation         |\n\t"
+               "|\t[\033[33m5\033[0m] \033[33mDeconnecter\033[0m                      |\n"
+               "\t==============================================\n\t"
+               "\n\tTapez votre choix [1-5] : ");
+               ch = scanf("%d", choix);
+               while(getchar() != '\n');
+               if(ch) return ch;
+               else return 0;
+}
+
+int Choix_Admin(int *choix){
+
+    printf("\n");
+    printf(CYAN "\t=================================================\n\t" RESET);
+    printf( "\033[36m||\033[0m              \x1b[32m Espace Administrateur \033[0m             \033[36m||\033[0m \n" );
+    printf(CYAN "\t=================================================\n\t" RESET);
+    printf( "\033[36m||\033[0m\t                                       \033[36m||\033[0m\n\t");
+    printf( "\033[36m||\033[0m\t \x1b[33m[1] Ajouter un Reclamation \x1b[0m              \033[36m||\033[0m\n\t" );
+    printf( "\033[36m||\033[0m\t                                       \033[36m||\033[0m\n\t");
+    printf( "\033[36m||\033[0m\t \x1b[33m[2] Afficher la list des Reclamation\x1b[0m     \033[36m||\033[0m\n\t" );
+    printf( "\033[36m||\033[0m\t                                       \033[36m||\033[0m\n\t");
+    printf( "\033[36m||\033[0m\t \x1b[33m[3] Modifier un Reclamation \x1b[0m             \033[36m||\033[0m\n\t" );
+    printf( "\033[36m||\033[0m\t                                       \033[36m||\033[0m\n\t");
+    printf( "\033[36m||\033[0m\t \x1b[33m[4] Supprimer un Reclamation  \x1b[0m           \033[36m||\033[0m\n\t" );
+    printf( "\033[36m||\033[0m\t                                       \033[36m||\033[0m\n\t");
+    printf( "\033[36m||\033[0m\t \x1b[33m[5] Modifier Le Role d'un Utilisateur \x1b[0m              \033[36m||\033[0m\n\t" );
+    printf( "\033[36m||\033[0m\t                                       \033[36m||\033[0m\n\t");
+    printf( "\033[36m||\033[0m\t \x1b[33m[6] Modifier Le Status d'une Reclamation \x1b[0m              \033[36m||\033[0m\n\t" );
+    printf( "\033[36m||\033[0m\t                                       \033[36m||\033[0m\n\t");
+    printf( "\033[36m||\033[0m\t \x1b[33m[7] Nombre Total de Reclamation \x1b[0m           \033[36m||\033[0m\n\t" );
+    printf( "\033[36m||\033[0m\t                                       \033[36m||\033[0m\n\t");
+    printf( "\033[36m||\033[0m\t \x1b[33m[8] Taux de Resolution des Reclamations \x1b[0m      \033[36m||\033[0m\n\t" );
+    printf( "\033[36m||\033[0m\t                                       \033[36m||\033[0m\n\t");
+    printf( "\033[36m||\033[0m\t \x1b[33m[9] Statistic et rapports \x1b[0m      \033[36m||\033[0m\n\t" );
+    printf( "\033[36m||\033[0m\t                                       \033[36m||\033[0m\n\t");
+    printf( "\033[36m||\033[0m\t \x1b[33m[10] Calculer Le Delai Moyen de Traitement \x1b[0m      \033[36m||\033[0m\n\t" );
+    printf( "\033[36m||\033[0m\t                                       \033[36m||\033[0m\n\t");
+    printf( "\033[36m||\033[0m\t \x1b[33m[11] Rapport Journalier \x1b[0m      \033[36m||\033[0m\n\t" );
+    printf( "\033[36m||\033[0m\t                                       \033[36m||\033[0m\n\t");
+    printf( "\033[36m||\033[0m\t \x1b[31m[12] Deconnecter \x1b[0m                          \033[36m||\033[0m\n");
+    printf( "\t\033[36m||\033[0m\t                                       \033[36m||\033[0m\n");
+    printf(CYAN "\t=================================================\n\t" RESET);
+    printf("\n\tTapez votre choix [1-6] : ");
+
+    int chx = scanf("%d" , choix);
+    while(getchar() != '\n');
+
+    return chx;
+
+}
 
 int Incription(){
 
@@ -366,7 +523,8 @@ int Connexion(){
 
 }
 
-// Relamation
+// Relamation ------------- 
+
 void Afficher_tout_les_Reclamation(){
 
     if(rec == NULL || R_Taille  == 0 ){
@@ -384,6 +542,8 @@ void Afficher_tout_les_Reclamation(){
             printf("\t -- Status      : %s\n" , rec[i].Status);
             printf("\t -- Description : %s\n" , rec[i].Description);
             printf("\t -- Date        : %s\n" , rec[i].date);
+            printf("\t -- Role        : %d\n" , user[index_user].Role);
+
             exist = 1;
             index += 1;
         }
@@ -645,5 +805,110 @@ int Supprimer_un_Reclamation(){
     }
     R_Taille--;
     return 1;
+
+}
+
+int Modifier_Role_Utilisateur(){
+
+    // virifier l'dentification existe ou non
+    int nom_count = 0 , pos; 
+   
+    while(1){
+
+        char Nom[20];
+        bool exist = false;
+        printf("\n\t -- Veuillez Saisir Le Nom D'utilisateur : ");
+        scanf(" %[^\n]s" , Nom);
+        while(getchar() != '\n');
+
+        for(int i=0;i<Taille;i++){
+            if(strcmp(user[i].Nom , Nom) == 0){
+                exist = true;
+                pos = i;
+                break;
+            }  
+        }
+
+        if(exist){
+            break;
+        }else if( nom_count > 2 ) {
+            return 0;
+        }else if (exist == false) {
+            printf("\n\t \x1b[33m--- Utilisateur avec ce nom n'est pas exist ----\x1b[0m \n");
+            nom_count++;
+        }else{
+            printf("\n\t \x1b[31m-- Invalid Id --\x1b[0m \n");
+            nom_count++;
+        }
+    }
+
+
+    int role;
+    printf("\n\t ---- Role d'Utilisateur ----\n");
+    printf("\t -- 1. Administrateur.\n");
+    printf("\t -- 2. Agent de Reclamation.\n");
+    printf("\t -- 3. Client.\n");
+    printf("\t - Tapez Votre Choix : ");
+    scanf("%d" , &role);
+
+    if(role >=1 && role <= 3){
+        user[pos].Role = role;
+        return 1;
+    }else{
+        return 0;
+    }
+
+}
+
+int Modifier_Status_Utilisateur(){
+
+    // virifier l'dentification existe ou non
+    int id_count = 0 , pos; 
+   
+    while(1){
+
+        char id[20];
+        bool exist = false;
+        printf("\n\t -- Veuillez Saisir L'dentification de Reclamation : ");
+        scanf(" %[^\n]s" , id);
+        while(getchar() != '\n');
+
+        for(int i=0;i<Taille;i++){
+            if(strcmp(rec[i].id , id) == 0){
+                exist = true;
+                pos = i;
+                break;
+            }  
+        }
+
+        if(exist){
+            break;
+        }else if( id_count > 2 ) {
+            return 0;
+        }else if (exist == false) {
+            printf("\n\t \x1b[33m--- Utilisateur avec ce nom n'est pas exist ----\x1b[0m \n");
+            id_count++;
+        }else{
+            printf("\n\t \x1b[31m-- Invalid Id --\x1b[0m \n");
+            id_count++;
+        }
+    }
+
+    int status;
+    printf("\n\t ---- Status de Reclamation ----\n");
+    printf("\t -- 1. en cours.\n");
+    printf("\t -- 2. Resolu.\n");
+    printf("\t -- 3. Rejeter.\n");
+    printf("\t - Tapez Votre Choix : ");
+    scanf("%d" , &status);
+
+    if(status >= 1 && status <= 3){
+        if(status == 1) strcpy(rec[pos].Status , "en cours");
+        else if (status == 2) strcpy(rec[pos].Status , "Resolu");
+        else if ( status == 3) strcpy(rec[pos].Status , "Rejeter");
+        return 1;
+    }else{
+        return 0;
+    }
 
 }
