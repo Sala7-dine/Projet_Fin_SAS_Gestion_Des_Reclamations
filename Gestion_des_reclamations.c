@@ -1083,8 +1083,10 @@ int verifier_duree(time_t heure_de_debut) {
     time_t heure_actuelle = time(NULL);
     double difference = difftime(heure_actuelle, heure_de_debut);
     
-    // Vérifier si 24 heures (86400 secondes) sont passées
+    // 1min => 60 secondes
+    // 24 heures => 86400 secondes
     return difference >= 60;
+
 }
 
 // Recherche ------------------------------------------------------------------------
@@ -1094,6 +1096,8 @@ void Rechercher_Reclamation(){
     int chx , i , id , exist = 1;
     char Nom[20] , Status[20];
 
+
+    // Trouve L'dentification
     while(1){
 
         printf("\n\t ----- Rechercher -------- \n");
@@ -1114,6 +1118,7 @@ void Rechercher_Reclamation(){
             }
     }
 
+    // Rechercher par identifiant
     if(chx == 1){
 
         char id[20];
@@ -1130,6 +1135,7 @@ void Rechercher_Reclamation(){
 
         if(exist) printf("\n\t \033[31m --- L'identifiant n'est pas exist ----- \033[0m\n");
 
+    // Rechercher par nom du client
     }else if(chx == 2){
 
         printf("\n\t Saisie Le Nom du Client : ");
@@ -1151,6 +1157,8 @@ void Rechercher_Reclamation(){
             printf("\n\t \033[31m --- Le Nom du Client n'est pas exist -----\033[0m\n");
             return;
         }
+
+    // Rechercher par status
     }else if(chx == 3){
 
         int status , existe = 1;
