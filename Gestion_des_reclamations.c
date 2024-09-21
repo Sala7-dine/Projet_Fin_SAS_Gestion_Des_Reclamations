@@ -38,6 +38,7 @@ typedef struct
     char date[MAX_DATE];
     int priorite;         
     int id_client; 
+    time_t heure_de_debut;
    
 }Reclamation;
 
@@ -62,7 +63,7 @@ void Afficher_Reclamation();
 int Ajouter_un_Reclamation();
 int Modifier_un_Reclamation();
 int Supprimer_un_Reclamation();
-int verrouillage_Modification(char *date_reclamation);
+int verifier_duree(time_t heure_de_debut);
 
 // Les Fonction de L'admin et L'agent
 int Modifier_Role_Utilisateur();
@@ -769,7 +770,10 @@ int Ajouter_un_Reclamation(){
     // Validation de La Date
     time_t t = time(NULL);
     struct tm tm = *localtime(&t);
-    strftime(reclamation.date, 100, "%d-%m-%Y %H:%M:%S", &tm);
+
+    // La date de creation
+    strftime(reclamation.date, 100, "%d-%m-%Y %H:%M", &tm);
+    reclamation.heure_de_debut = time(NULL);
 
     // id_clien
     reclamation.id_client = index_user; 
@@ -813,30 +817,23 @@ int Modifier_un_Reclamation(){
         }
     }
 
-    int possible = verrouillage_Modification(rec[pos].date);
 
-    printf("\n --- possible %d ---- \n" , possible);
+    if (verifier_duree(rec[pos].heure_de_debut) && user[index_user].Role == 0){
 
-    if(possible != 1){
-
-        Reclamation reclamation;
+        printf("\n\t \x1b[33m !! Le Delai Pour La Modification Est Expire !! \x1b[0m\n");
+        return 0;
+    }else{
 
         printf("\n\t \x1b[32m---- Modifier un Reclamation ----\x1b[0m\n");
 
-
-        // autre champ 
-        strcpy(reclamation.id, rec[pos].id);   
-        strcpy(reclamation.Status, rec[pos].Status);   
-        strcpy(reclamation.date, rec[pos].date);   
-        reclamation.id_client = index_user;
 
         // Validation de motif -------
         int Motif_count = 0;
         while(1){
             printf("\n\t -- Le Motif de la Reclamation : ");
-            int valide_input = scanf(" %[^\n]s" , reclamation.Motif);
+            int valide_input = scanf(" %[^\n]s" , rec[pos].Motif);
 
-            if(valide_input && strlen(reclamation.Motif) > 3){
+            if(valide_input && strlen(rec[pos].Motif) > 3){
                 break;
             }else if(Motif_count > 2){
                 return 0;
@@ -850,9 +847,9 @@ int Modifier_un_Reclamation(){
         int Description_count = 0;
         while(1){
             printf("\n\t -- La Description de la Reclamation : ");
-            int valide_input = scanf(" %[^\n]s" , reclamation.Description);
+            int valide_input = scanf(" %[^\n]s" , rec[pos].Description);
 
-            if(valide_input && strlen(reclamation.Description) > 3){
+            if(valide_input && strlen(rec[pos].Description) > 3){
                 break;
             }else if(Description_count > 2){
                 return 0;
@@ -866,9 +863,9 @@ int Modifier_un_Reclamation(){
         int Categorie_count = 0;
         while(1){
                 printf("\n\t -- La Categorie de la Reclamation : ");
-                int valide_input = scanf(" %[^\n]s" , reclamation.Categorie);
+                int valide_input = scanf(" %[^\n]s" , rec[pos].Categorie);
 
-                if(valide_input && strlen(reclamation.Categorie) > 3){
+                if(valide_input && strlen(rec[pos].Categorie) > 3){
                     break;
                 }else if(Categorie_count > 2){
                     return 0;
@@ -878,20 +875,13 @@ int Modifier_un_Reclamation(){
                 }
             }
 
+        printf("\n\t --- id client : %d \n" , rec[pos].id_client); 
 
-            rec[pos] = reclamation;
-
-            printf("\n --- id client : %d \n" , rec[pos].id_client); 
-
-            return 1;
-    }else {
-        return 0;
+        return 1;
     }
 
-
-
     
-
+    
 }
 
 int Supprimer_un_Reclamation(){
@@ -1062,34 +1052,10 @@ int Modifier_Status_Utilisateur(){
 
 // virification de modification ------------------------------------------------------------------------
 
-int verrouillage_Modification(char *date_reclamation){
-
-    struct tm date_rec = {0};  
+int verifier_duree(time_t heure_de_debut) {
+    time_t heure_actuelle = time(NULL);
+    double difference = difftime(heure_actuelle, heure_de_debut);
     
-   
-    sscanf(date_reclamation, "%d-%d-%d %d:%d:%d", 
-           &date_rec.tm_mday, &date_rec.tm_mon, &date_rec.tm_year, 
-           &date_rec.tm_hour, &date_rec.tm_min, &date_rec.tm_sec);
-    
-    
-    date_rec.tm_mon -= 1;     
-    date_rec.tm_year -= 1900; 
-    
-    
-    time_t reclamation_time = mktime(&date_rec);
-    
-   
-    time_t current_time = time(NULL);
-    
-
-    int difference = difftime(current_time, reclamation_time);  
-
-    printf("\n ---- differance %d ---- \n" , difference);
-    
-    if (difference > 60) {
-        return 1; 
-    }
-    return 0;
-
-
+    // Vérifier si 24 heures (86400 secondes) sont passées
+    return difference >= 60;
 }
