@@ -19,6 +19,27 @@
 #define MAX_STATUS 20
 #define MAX_DATE 12
 
+#define MAX_MOTS 10
+
+    char *priorite_haute[MAX_MOTS] = {
+        "urgent", "immediat", "bloquant", 
+        "important", "panne", 
+        "probleme", "echec", "danger"
+    };
+
+    char *priorite_moyenne[MAX_MOTS] = {
+        "probleme recurrent", "besoin d'aide", "demande de suivi", 
+        "erreur", "incompatibilite", "service lent", 
+        "fonctionnalite manquante", "dysfonctionnement"
+    };
+
+    char *priorite_basse[MAX_MOTS] = {
+            "suggestion", "amelioration", "question", "petit souci", 
+            "demande d'information", "retard mineur", 
+            "bug mineur", "reclamation generale"
+    };
+
+
 typedef struct {
     char id[MAX_CHARACTERE];
     char Nom[MAX_CHARACTERE];
@@ -35,8 +56,7 @@ typedef struct
     char Categorie[MAX_CHARACTERE];
     char Note[MAX_CHARACTERE];
     char Status[MAX_STATUS];
-    char date[MAX_DATE];
-    int priorite;         
+    char date[MAX_DATE];  
     int id_client; 
     time_t heure_de_debut;
    
@@ -72,6 +92,8 @@ int Modifier_Status_Utilisateur();
 // Recherhce -------- 
 void Rechercher_Reclamation();
 
+// Rapport et Statistiqueq
+
 
 int main(){
 
@@ -79,12 +101,12 @@ int main(){
     printf("\n\t  \x1b[35m||      BIENVENU A L'APPLICATION      ||\x1b[0m\n");
     printf("\t  \x1b[35m========================================\x1b[0m\n");
 
-    int auth = -1 , choix = 0  , r_choix = 0 , choix_admin = 0 , choix_agent = 0;
+    int auth = -1 , choix = 0  , r_choix = 0 , choix_admin = 0 , choix_agent = 0 , quitter = -1;
 
     user = malloc(Taille*sizeof(Utilisateurs));
-    rec = malloc(Taille*sizeof(Reclamation));
+    rec = malloc(R_Taille*sizeof(Reclamation));
 
-    while(1){
+    while(quitter != 0){
 
         int connect = 0;
 
@@ -129,8 +151,14 @@ int main(){
                     Sleep(10000);
                 } 
                 break;
+            case 0 :
+                printf("\n\t \x1b[31m ******** AU REVOIRE **********  \x1b[0m \n");
+                auth = 0;
+                quitter = 0;
+                break;
         
         default:
+
             break;
 
         }
@@ -316,21 +344,11 @@ int main(){
                             printf("\n\t \x1b[31m--- Erreur lors de Modification de Recalamtion ----\x1b[0m \n");
                     }
                     break;
-                    break;
                 case 8 :
                     break;
                 case 9 :
-                    break;
-                case 10 :
-                    break;
-                case 11 :
-                    break;
-                case 12 :
-                    break;
-                case 13 :
                     auth = -1;
                     break;
-                
                 default:
                     break;
             }
@@ -341,6 +359,10 @@ int main(){
         }
     }
 }
+    // Libération de la mémoire allouée
+    free(user);   
+    free(rec);   
+    return 0;
 }
 
 // Les Menu D'application ------------------------------------------------------------------------
@@ -420,17 +442,9 @@ int Choix_Admin(int *choix){
     printf( "\033[36m||\033[0m\t                                               \033[36m||\033[0m\n\t");
     printf( "\033[36m||\033[0m\t \x1b[33m[7] Modifier Le Status d'une Reclamation \x1b[0m     \033[36m||\033[0m\n\t" );
     printf( "\033[36m||\033[0m\t                                               \033[36m||\033[0m\n\t");
-    printf( "\033[36m||\033[0m\t \x1b[33m[8] Nombre Total de Reclamation \x1b[0m              \033[36m||\033[0m\n\t" );
+    printf( "\033[36m||\033[0m\t \x1b[33m[8] Statistiques et Rapports \x1b[0m                 \033[36m||\033[0m\n\t" );
     printf( "\033[36m||\033[0m\t                                               \033[36m||\033[0m\n\t");
-    printf( "\033[36m||\033[0m\t \x1b[33m[9] Taux de Resolution des Reclamations \x1b[0m      \033[36m||\033[0m\n\t" );
-    printf( "\033[36m||\033[0m\t                                               \033[36m||\033[0m\n\t");
-    printf( "\033[36m||\033[0m\t \x1b[33m[10] Statistic et rapports \x1b[0m                   \033[36m||\033[0m\n\t" );
-    printf( "\033[36m||\033[0m\t                                               \033[36m||\033[0m\n\t");
-    printf( "\033[36m||\033[0m\t \x1b[33m[11] Calculer Le Delai Moyen de Traitement \x1b[0m   \033[36m||\033[0m\n\t" );
-    printf( "\033[36m||\033[0m\t                                               \033[36m||\033[0m\n\t");
-    printf( "\033[36m||\033[0m\t \x1b[33m[12] Rapport Journalier \x1b[0m                      \033[36m||\033[0m\n\t" );
-    printf( "\033[36m||\033[0m\t                                               \033[36m||\033[0m\n\t");
-    printf( "\033[36m||\033[0m\t \x1b[31m[13] Deconnecter \x1b[0m                             \033[36m||\033[0m\n");
+    printf( "\033[36m||\033[0m\t \x1b[31m[9] Deconnecter \x1b[0m                              \033[36m||\033[0m\n");
     printf( "\t\033[36m||\033[0m\t                                               \033[36m||\033[0m\n");
     printf(CYAN "\t=========================================================\n\t" RESET);
     printf("\n\tTapez votre choix => : ");
@@ -654,7 +668,6 @@ void Afficher_tout_les_Reclamation(){
             else if(user[rec[i].id_client].Role == 2) printf("\t -- Role        : Agent de Reclamation\n");
             else if(user[rec[i].id_client].Role == 0) printf("\t -- Role        : Client\n");
             
-
     }
 
 }
@@ -708,8 +721,6 @@ int Ajouter_un_Reclamation(){
         printf("\n\t \x1b[31m--- Erreur D'allocation ----\x1b[0m\n");
         return 0;
     }
-
-    Reclamation reclamation;
     
     printf("\n\t \x1b[32m---- Ajouter un Reclamation ----\x1b[0m \n");
  
@@ -733,11 +744,11 @@ int Ajouter_un_Reclamation(){
 
         int exist = 1;
         for(i=0;i<R_Taille;i++){
-            if(strcmp(reclamation.id,Generate_id) == 0) exist = 0;
+            if(strcmp(rec[R_Taille].id,Generate_id) == 0) exist = 0;
         }
 
         if(exist && strlen(Generate_id) > 10 ){
-            strncpy(reclamation.id , Generate_id , 10);
+            strncpy(rec[R_Taille].id , Generate_id , 10);
             break;
         }
     }
@@ -746,9 +757,9 @@ int Ajouter_un_Reclamation(){
     int Motif_count = 0;
     while(1){
         printf("\n\t -- Le Motif de la Reclamation : ");
-        int valide_input = scanf(" %[^\n]s" , reclamation.Motif);
+        int valide_input = scanf(" %[^\n]s" , rec[R_Taille].Motif);
 
-        if(valide_input && strlen(reclamation.Motif) > 3){
+        if(valide_input && strlen(rec[R_Taille].Motif) > 3){
             break;
         }else if(Motif_count > 2){
             return 0;
@@ -762,9 +773,9 @@ int Ajouter_un_Reclamation(){
     int Description_count = 0;
     while(1){
         printf("\n\t -- La Description de la Reclamation : ");
-        int valide_input = scanf(" %[^\n]s" , reclamation.Description);
+        int valide_input = scanf(" %[^\n]s" , rec[R_Taille].Description);
 
-        if(valide_input && strlen(reclamation.Description) > 3){
+        if(valide_input && strlen(rec[R_Taille].Description) > 3){
             break;
         }else if(Description_count > 2){
             return 0;
@@ -774,13 +785,29 @@ int Ajouter_un_Reclamation(){
         }
     }
 
+    // priorite  -------- 
+
+    // for(int i=0; i<8; i++) {
+    //     if(strstr(rec[R_Taille].Description, priorite_haute[i]) != NULL) {
+    //         rec[R_Taille].prt = 1;
+    //         break;
+    //     } else if(strstr(rec[R_Taille].Description, priorite_moyenne[i]) != NULL) {
+    //         rec[R_Taille].prt = 2;
+    //         break;
+    //     } else if(strstr(rec[R_Taille].Description, priorite_basse[i]) != NULL) {
+    //         rec[R_Taille].prt = 3;
+    //         break;
+    //     }
+    // }
+   
+
     // Validation de Categorie -------
     int Categorie_count = 0;
     while(1){
         printf("\n\t -- La Categorie de la Reclamation : ");
-        int valide_input = scanf(" %[^\n]s" , reclamation.Categorie);
+        int valide_input = scanf(" %[^\n]s" , rec[R_Taille].Categorie);
 
-        if(valide_input && strlen(reclamation.Categorie) > 3){
+        if(valide_input && strlen(rec[R_Taille].Categorie) > 3){
             break;
         }else if(Categorie_count > 2){
             return 0;
@@ -791,21 +818,19 @@ int Ajouter_un_Reclamation(){
     }
 
     // Validation de Status -------
-    strcpy(reclamation.Status , "en attente");
-    strcpy(reclamation.Note , "");
+    strcpy(rec[R_Taille].Status , "en attente");
+    strcpy(rec[R_Taille].Note , "");
 
     // Validation de La Date
     time_t t = time(NULL);
     struct tm tm = *localtime(&t);
 
     // La date de creation
-    strftime(reclamation.date, 100, "%d-%m-%Y %H:%M", &tm);
-    reclamation.heure_de_debut = time(NULL);
+    strftime(rec[R_Taille].date, 100, "%d-%m-%Y %H:%M", &tm);
+    rec[R_Taille].heure_de_debut = time(NULL);
 
     // id_clien
-    reclamation.id_client = index_user; 
-
-    rec[R_Taille] = reclamation;
+    rec[R_Taille].id_client = index_user; 
 
     return 1;
 }
@@ -1204,7 +1229,6 @@ void Rechercher_Reclamation(){
             return;
         }
 
-    
     }else if(chx == 0){
         return; 
     }else {
@@ -1213,3 +1237,4 @@ void Rechercher_Reclamation(){
     }
 
 }
+
