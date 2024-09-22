@@ -33,15 +33,7 @@
         "fonctionnalite manquante", "dysfonctionnement"
     };
 
-    char *priorite_basse[MAX_MOTS] = {
-            "suggestion", "amelioration", "question", "petit souci", 
-            "demande d'information", "retard mineur", 
-            "bug mineur", "reclamation generale"
-    };
-
-
 typedef struct {
-    char id[MAX_CHARACTERE];
     char Nom[MAX_CHARACTERE];
     char Email[MAX_CHARACTERE]; 
     char Password[MAX_CHARACTERE];
@@ -50,15 +42,17 @@ typedef struct {
 
 typedef struct 
 {
-    char id[MAX_CHARACTERE];
+    int id;
     char Motif[MAX_CHARACTERE];
     char Description[MAX_DESCRIPTION];
+    int priorite;
     char Categorie[MAX_CHARACTERE];
     char Note[MAX_CHARACTERE];
     char Status[MAX_STATUS];
     char date[MAX_DATE];  
     int id_client; 
     time_t heure_de_debut;
+    int differance;
    
 }Reclamation;
 
@@ -92,7 +86,6 @@ int Modifier_Status_Utilisateur();
 // Recherhce -------- 
 void Rechercher_Reclamation();
 
-// Rapport et Statistiqueq
 
 
 int main(){
@@ -114,13 +107,13 @@ int main(){
         // Authentification ---------------------- 
             printf("\n"
                "\t==============================================\n\t"
-               "|             \033[36m AUTHENTIFICATION \033[0m             |\n"
+               "||             \033[36m AUTHENTIFICATION \033[0m           ||\n"
                "\t==============================================\n\t"
-               "|\t                                     |\n\t"
-               "|\t      [1] INSCRIPTION                |\n\t"
-               "|\t      [2] CONNEXION                  |\n\t"
-               "|\t      [\033[33m0\033[0m] \033[33mQUITTER\033[0m                    |\n"
-               "\t|                                            |\n"
+               "||\t                                    ||\n\t"
+               "||\t      [1] INSCRIPTION               ||\n\t"
+               "||\t      [2] CONNEXION                 ||\n\t"
+               "||\t      [\033[33m0\033[0m] \033[33mQUITTER\033[0m                   ||\n"
+               "\t||                                          ||\n"
                "\t==============================================\n\t"
                "\n\tTapez votre choix => : ");
             scanf("%d" , &auth);
@@ -136,7 +129,7 @@ int main(){
                     Taille++;
                     connect = 1;
                     auth = 0;
-                } else printf("\n\t --- Inscription Invalid --- \n");
+                } else printf("\n\t \x1b[31m--- Inscription Invalid ---\x1b[0m \n");
                 break;
             case 2 :
                 int index = Connexion();
@@ -152,7 +145,7 @@ int main(){
                 } 
                 break;
             case 0 :
-                printf("\n\t \x1b[31m ******** AU REVOIRE **********  \x1b[0m \n");
+                printf("\n\n\t \x1b[31m ******** AU REVOIRE **********  \x1b[0m \n\n\n");
                 auth = 0;
                 quitter = 0;
                 break;
@@ -470,40 +463,11 @@ int Incription(){
 
     Utilisateurs user_inscr;
     printf("\n\t \x1b[32m---- Inscription ----\x1b[0m \n");
- 
-    // generer L'id ----------- 
-    srand(time(NULL));
-    while(1){
-
-        int counter = 0 , i;  
-        char Generate_id[100];
-
-        for(i=0;counter<100;i++){
-            char random = 48 + (rand() % 74);
-            if( (random >= 48 && random <= 57 ) || (random >= 65 && random <= 90 ) || (random >= 97 && random <= 122 )){
-                Generate_id[i] = random; 
-                counter++;      
-                
-            }
-        }
-
-        Generate_id[i] = '\0';
-
-        int exist = 1;
-        for(i=0;i<Taille;i++){
-            if(strcmp(user_inscr.id,Generate_id) == 0) exist = 0;
-        }
-
-        if(exist && strlen(Generate_id) > 10 ){
-            strncpy(user_inscr.id , Generate_id , 10);
-            break;
-        }
-
-    }
     
     // Validation de nom -------
-    int nom_count = 0 ;
+    int nom_count = 0;
     while(1){
+        int user_exist = 0;
         printf("\n\t -- Nom d'utilisateur : ");
         int valide_input = scanf(" %[^\n]s" , user_inscr.Nom);
         
@@ -518,10 +482,22 @@ int Incription(){
             i++;
         }
 
-        if(valide_input && strlen(user_inscr.Nom) > 3 && valid_nom){
+        for(int i=0;i<Taille;i++){
+            if(strcmp(user_inscr.Nom , user[i].Nom) == 0) {
+                user_exist = 1;
+                break;
+            } 
+        }
+
+
+
+        if(valide_input && strlen(user_inscr.Nom) > 3 && valid_nom && user_exist == 0){
             break;
         }else if(nom_count > 2){
             return 0;
+        }else if(user_exist){
+            nom_count++;
+            printf("\n\t \x1b[33m-- Le Nom deja exist --\x1b[0m \n");
         }else{
             nom_count++;
             printf("\n\t \x1b[31m-- Invalid Nom --\x1b[0m \n");
@@ -653,15 +629,30 @@ void Afficher_tout_les_Reclamation(){
         return; 
     }
 
+    Reclamation reclamation;
+
+    for(int i=0;i<R_Taille;i++){
+        for(int j=i+1;j<R_Taille;j++){
+            if(rec[i].priorite < rec[j].priorite){
+                reclamation = rec[i];
+                rec[i] = rec[j];
+                rec[j] = reclamation;
+            }
+        }
+    }
+
     for(int i=0;i<R_Taille;i++){
 
             printf("\n\t \x1b[32m------ Reclamation %d ------\x1b[0m\n\n" , i+1);
-            printf("\t -- iD          : %s\n" , rec[i].id);
+            printf("\t -- iD          : %d\n" , rec[i].id);
             printf("\t -- Client      : %s\n" , user[rec[i].id_client].Nom);
             printf("\t -- Motif       : %s\n" , rec[i].Motif);
             printf("\t -- Catgorie    : %s\n" , rec[i].Categorie);
             printf("\t -- Status      : %s\n" , rec[i].Status);
             printf("\t -- Description : %s\n" , rec[i].Description);
+            if(rec[i].priorite == 2)printf("\t -- priorite    : Haute\n");
+            else if(rec[i].priorite == 1)printf("\t -- priorite    : Moyenne\n");
+            else if(rec[i].priorite == 0) printf("\t -- priorite    : Basse\n");
             printf("\t -- Note        : %s\n" , rec[i].Note);
             printf("\t -- Date        : %s\n" , rec[i].date);
             if(user[rec[i].id_client].Role == 1) printf("\t -- Role        : Administrateur\n");
@@ -683,7 +674,7 @@ void Afficher_Reclamation(){
     for(int i=0;i<R_Taille;i++){
         if(rec[i].id_client == index_user){
             printf("\n\t \x1b[32m------ Reclamation %d ------\x1b[0m\n\n" , index);
-            printf("\t -- iD          : %s\n" , rec[i].id);
+            printf("\t -- iD          : %d\n" , rec[i].id);
             printf("\t -- Motif       : %s\n" , rec[i].Motif);
             printf("\t -- Catgorie    : %s\n" , rec[i].Categorie);
             printf("\t -- Status      : %s\n" , rec[i].Status);
@@ -702,7 +693,7 @@ void Afficher_Reclamation(){
 void Afficher_une_Reclamation(Reclamation r , int i){
 
     printf("\n\t \x1b[32m------ Reclamation %d ------\x1b[0m\n\n" , i);
-    printf("\t -- iD          : %s\n" , r.id);
+    printf("\t -- iD          : %d\n" , r.id);
     printf("\t -- Client      : %s\n" , user[r.id_client].Nom);
     printf("\t -- Motif       : %s\n" , r.Motif);
     printf("\t -- Catgorie    : %s\n" , r.Categorie);
@@ -725,30 +716,18 @@ int Ajouter_un_Reclamation(){
     printf("\n\t \x1b[32m---- Ajouter un Reclamation ----\x1b[0m \n");
  
     // generer L'id ----------- 
-    srand(time(NULL));
+    srand(time(0));
     while(1){
-
-        int counter= 0 , i;  
-        char Generate_id[100];
-
-        for(i=0;counter<100;i++){
-            char random = 48 + (rand() % 74);
-            if( (random >= 48 && random <= 57 ) || (random >= 65 && random <= 90 ) || (random >= 97 && random <= 122 )){
-                Generate_id[i] = random; 
-                counter++;      
-                
+        int existe = 1;
+        int random_number = 1000000 + rand() % 9000000;
+        for(int i=0;i<R_Taille;i++){
+            if(rec[i].id == random_number){
+                existe = 0;
             }
         }
 
-        Generate_id[i] = '\0';
-
-        int exist = 1;
-        for(i=0;i<R_Taille;i++){
-            if(strcmp(rec[R_Taille].id,Generate_id) == 0) exist = 0;
-        }
-
-        if(exist && strlen(Generate_id) > 10 ){
-            strncpy(rec[R_Taille].id , Generate_id , 10);
+        if(existe) {
+            rec[R_Taille].id = random_number;
             break;
         }
     }
@@ -786,20 +765,16 @@ int Ajouter_un_Reclamation(){
     }
 
     // priorite  -------- 
-
-    // for(int i=0; i<8; i++) {
-    //     if(strstr(rec[R_Taille].Description, priorite_haute[i]) != NULL) {
-    //         rec[R_Taille].prt = 1;
-    //         break;
-    //     } else if(strstr(rec[R_Taille].Description, priorite_moyenne[i]) != NULL) {
-    //         rec[R_Taille].prt = 2;
-    //         break;
-    //     } else if(strstr(rec[R_Taille].Description, priorite_basse[i]) != NULL) {
-    //         rec[R_Taille].prt = 3;
-    //         break;
-    //     }
-    // }
-   
+    rec[R_Taille].priorite = 0;
+    for(int i=0; i<8; i++) {
+        if(strstr(rec[R_Taille].Description, priorite_haute[i]) != NULL) {
+            rec[R_Taille].priorite = 2;
+            break;
+        } else if(strstr(rec[R_Taille].Description, priorite_moyenne[i]) != NULL) {
+            rec[R_Taille].priorite = 1;
+            break;
+        }
+    }   
 
     // Validation de Categorie -------
     int Categorie_count = 0;
@@ -829,6 +804,8 @@ int Ajouter_un_Reclamation(){
     strftime(rec[R_Taille].date, 100, "%d-%m-%Y %H:%M", &tm);
     rec[R_Taille].heure_de_debut = time(NULL);
 
+    rec[R_Taille].differance = 0;
+
     // id_clien
     rec[R_Taille].id_client = index_user; 
 
@@ -841,14 +818,14 @@ int Modifier_un_Reclamation(){
     int mod_count = 0 , pos;
    
     while(1){
-        char id[20];
+        int id;
         bool exist = false;
         printf("\n\t -- Veuillez Saisir Le identification de Reclamation : ");
-        scanf(" %[^\n]s" , id);
+        scanf("%d" , &id);
         while(getchar() != '\n');
 
         for(int i=0;i<R_Taille;i++){
-            if(strcmp(rec[i].id , id) == 0){
+            if(rec[i].id == id){
                 exist = true;
                 pos = i;
                 break;
@@ -932,8 +909,6 @@ int Modifier_un_Reclamation(){
         return 1;
     }
 
-    
-    
 }
 
 int Supprimer_un_Reclamation(){
@@ -942,14 +917,14 @@ int Supprimer_un_Reclamation(){
     int sup_coount = 0 , pos;
    
     while(1){
-        char id[20];
+        int id;
         bool exist = false;
         printf("\n\t -- Veuillez Saisir Le identification de Reclamation : ");
-        scanf(" %[^\n]s" , id);
+        scanf("%d" , &id);
         while(getchar() != '\n');
 
         for(int i=0;i<R_Taille;i++){
-            if(strcmp(rec[i].id , id) == 0){
+            if(rec[i].id == id){
                 exist = true;
                 pos = i;
                 break;
@@ -1042,14 +1017,14 @@ int Modifier_Status_Utilisateur(){
    
     while(1){
 
-        char id[20];
+        int id;
         bool exist = false;
         printf("\n\t -- Veuillez Saisir L'dentification de Reclamation : ");
-        scanf(" %[^\n]s" , id);
+        scanf("%d" , &id);
         while(getchar() != '\n');
 
         for(int i=0;i<R_Taille;i++){
-            if(strcmp(rec[i].id , id) == 0){
+            if(rec[i].id == id){
                 exist = true;
                 pos = i;
                 break;
@@ -1078,8 +1053,18 @@ int Modifier_Status_Utilisateur(){
     scanf("%d" , &status);
 
     if(status >= 1 && status <= 3){
+
+
         if(status == 1) strcpy(rec[pos].Status , "en cours");
-        else if (status == 2) strcpy(rec[pos].Status , "Resolu");
+        else if(status == 2) {
+            strcpy(rec[pos].Status , "Resolu");
+
+            time_t heure_actuelle = time(NULL);
+            double difference = difftime(heure_actuelle, rec[pos].heure_de_debut);
+
+            rec[pos].differance = difference;
+
+        }  
         else if ( status == 3) strcpy(rec[pos].Status , "Rejeter");
 
         char note[MAX_CHARACTERE];
@@ -1146,12 +1131,12 @@ void Rechercher_Reclamation(){
     // Rechercher par identifiant
     if(chx == 1){
 
-        char id[20];
+        int id;
         printf("\n\t Saisie L'dentifiant de Reclamation: ");
-        scanf(" %[^\n]s" , id);
+        scanf("%d" , &id);
 
         for(i=0;i<R_Taille;i++){
-            if(strcmp(rec[i].id,id) == 0){
+            if(rec[i].id==id){
                 Afficher_une_Reclamation(rec[i] , i+1);
                 exist = 0;
                 break;
