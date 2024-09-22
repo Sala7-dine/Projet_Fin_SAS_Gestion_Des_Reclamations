@@ -86,7 +86,8 @@ int Modifier_Status_Utilisateur();
 // Recherhce -------- 
 void Rechercher_Reclamation();
 
-
+// Rapport et Statistiqueq
+void Statistiques_Rapport();
 
 int main(){
 
@@ -338,6 +339,7 @@ int main(){
                     }
                     break;
                 case 8 :
+                    Statistiques_Rapport();
                     break;
                 case 9 :
                     auth = -1;
@@ -1223,3 +1225,50 @@ void Rechercher_Reclamation(){
 
 }
 
+void Statistiques_Rapport(){
+
+    int nombre_total = R_Taille;
+    int total_resolu = 0;
+    int differance_total = 0;
+    int taux_resolution = 0, moyenne_traitement = 0;
+    int i;
+
+    if (nombre_total > 0) {
+        for (i = 0; i < nombre_total; i++) {
+          
+            if (rec[i].Status != NULL && strcmp(rec[i].Status, "Resolu") == 0) {
+                total_resolu++;
+                if (rec[i].differance > 0) {
+                    differance_total += rec[i].differance;
+                }
+            }
+        }
+
+        if (total_resolu > 0) { 
+            taux_resolution = (total_resolu * 100) / nombre_total;
+            moyenne_traitement = differance_total / total_resolu;
+        } else {
+            taux_resolution = 0;
+            moyenne_traitement = 0; 
+        }
+
+        // Conversion optionnelle du temps (commentée) :
+        // int jours = moyenne_traitement / 86400; 
+        // int heures = (moyenne_traitement % 86400) / 3600;  
+    }
+
+
+    printf(BLUE"+-----------------------------------------------------------------------------------------------+\n"RESET);
+    printf("|                                      STATISTIQUES                                             |\n"RESET);
+    printf(BLUE"+-----------------------------------------------------------------------------------------------+\n"RESET);
+    printf("| \x1b[37mTOTAL DE RECLAMATIONS        |   RESOLUTION DES RECLAMATIONS |  DELAI MOYEN DE TRAITEMENT\x1b[0m     |\n");
+    printf(BLUE"+------------------------------+-------------------------------+--------------------------------+\n"RESET);
+    printf("|           \x1b[37m%d                  |               %d%            |          %d seconde \x1b[0m           |\n", nombre_total, taux_resolution, moyenne_traitement); 
+    printf(BLUE"+------------------------------+-------------------------------+--------------------------------+\n"RESET);
+
+
+
+    
+
+
+}
