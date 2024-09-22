@@ -89,6 +89,8 @@ void Rechercher_Reclamation();
 // Rapport et Statistiqueq
 void Statistiques_Rapport();
 
+
+
 int main(){
 
     printf("\n\t  \x1b[35m========================================\x1b[0m");
@@ -99,6 +101,9 @@ int main(){
 
     user = malloc(Taille*sizeof(Utilisateurs));
     rec = malloc(R_Taille*sizeof(Reclamation));
+
+
+
 
     while(quitter != 0){
 
@@ -149,6 +154,7 @@ int main(){
                 printf("\n\n\t \x1b[31m ******** AU REVOIRE **********  \x1b[0m \n\n\n");
                 auth = 0;
                 quitter = 0;
+
                 break;
         
         default:
@@ -173,7 +179,7 @@ int main(){
                 case 1:
                     int valid_Ajoute = Ajouter_un_Reclamation();
                     if(valid_Ajoute){
-                        printf("\n\t \x1b[32m--- Le Contact a ete Ajoute avec Succes ----\x1b[0m \n");
+                        printf("\n\t \x1b[32m--- Reclamation a ete Ajoute avec Succes ----\x1b[0m \n");
                         R_Taille++;
                     }else{
                         printf("\n\t \x1b[31m--- Erreur d'ajoutr ----\x1b[0m \n");
@@ -1092,6 +1098,7 @@ int Modifier_Status_Utilisateur(){
 // virification de modification ------------------------------------------------------------------------
 
 int verifier_duree(time_t heure_de_debut) {
+
     time_t heure_actuelle = time(NULL);
     double difference = difftime(heure_actuelle, heure_de_debut);
     
@@ -1190,7 +1197,7 @@ void Rechercher_Reclamation(){
                 }
             }
 
-            if(existe) printf("\n\t\t\033[31m !! Aucun Reclamation 'en cours' a afficher \033[0m\n");
+            if(existe) printf("\n\t\t\033[31m !! Aucun Reclamation 'en cours' a afficher !! \033[0m\n");
 
         } 
         else if (status == 2){
@@ -1201,7 +1208,7 @@ void Rechercher_Reclamation(){
                 }
             }
 
-            if(existe) printf("\n\t\t\033[31m !! Aucun Reclamation 'Resolu' a afficher \033[0m\n");
+            if(existe) printf("\n\t\t\033[31m !! Aucun Reclamation 'Resolu' a afficher !! \033[0m\n");
         }
         else if ( status == 3){
             for(i=0;i<R_Taille;i++){
@@ -1210,7 +1217,7 @@ void Rechercher_Reclamation(){
                     existe = 0;
                 }
             }
-            if(existe) printf("\n\t\t\033[31m !! Aucun Reclamation 'Rejeter' a afficher \033[0m\n");
+            if(existe) printf("\n\t\t\033[31m !! Aucun Reclamation 'Rejeter' a afficher !! \033[0m\n");
         }else{
             printf("\n\t\t\033[31m ------ Choix Invalide ------ \033[0m\n");
             return;
@@ -1268,7 +1275,33 @@ void Statistiques_Rapport(){
 
 
 
-    
+    char file_name[20] = "Rapport.text";
+    FILE *file = fopen(file_name, "w");
+
+    if (file != NULL)
+    {
+        fprintf(file, "\n"
+
+                "============================================================\n"
+                "|                   GESTION DES RECLAMATIONS               |\n"
+                "============================================================\n"
+                "| Ce rapport fournit un suivi des reclamations soumises    |\n"
+                "| par nos clients, ainsi que l'etat de leur resolution.    |\n"
+                "| Votre efficacite garantit leur satisfaction.             |\n"
+                "============================================================\n"
+                "|                   RAPPORT JOURNALIER                     |\n"
+                "============================================================\n"
+                "------------------------------------------------------------\n"
+                "| TOTAL DE RECLAMATIONS         : %d                      |\n"
+                "| RESOLUTION DES RECLAMATIONS   : %d %                      |\n"
+                "| DELAI MOYEN DE TRAITEMENT     : %d seconde               |\n"
+                "------------------------------------------------------------\n"
+                "|         Fin du rapport journalier d'aujourd'hui          |\n"
+                "============================================================\n"
+                , nombre_total ,taux_resolution ,  moyenne_traitement);
+        fclose(file);
+    }
 
 
 }
+
