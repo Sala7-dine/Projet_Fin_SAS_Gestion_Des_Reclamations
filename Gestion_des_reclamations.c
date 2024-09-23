@@ -92,6 +92,7 @@ void Statistiques_Rapport();
 // Sauvgarder des donnee
 int Enregistrement();
 
+
 int main(){
 
     printf("\n\t  \x1b[35m========================================\x1b[0m");
@@ -550,7 +551,12 @@ int Incription(){
         int valide_input = scanf(" %[^\n]s" , user_inscr.Password);
         
         int i = 0 , maj = 0 , min = 0 , chiffre = 0 , charactere = 0;
-        int valid_password = 0;
+        int valid_password = 0 , existe = 0;
+
+        if(strstr(user_inscr.Password , user_inscr.Nom) != NULL){
+            existe = 1;
+        }
+
 
         while(user_inscr.Password[i] != '\0'){
             if(user_inscr.Password[i] >= 47 && user_inscr.Password[i] <= 57){
@@ -567,10 +573,13 @@ int Incription(){
 
         valid_password = maj + min + chiffre + charactere;
 
-        if(valide_input && strlen(user_inscr.Password) > 8 && valid_password >= 4){
+        if(valide_input && strlen(user_inscr.Password) > 8 && valid_password >= 4 && existe == 0){
             break;
         }else if(nom_count > 2){
             return 0;
+        }else if(existe){
+            nom_count++;
+            printf("\n\t \x1b[33m !!! Le nom ne doit pas etre dans le mot de passe  !!!\x1b[0m \n");  
         }else{
             nom_count++;
             printf("\n\t \x1b[31m-- Invalid Password --\x1b[0m \n");
@@ -895,6 +904,19 @@ int Modifier_un_Reclamation(){
             }
         }
 
+
+        // priorite  -------- 
+        rec[pos].priorite = 0;
+        for(int i=0; i<8; i++) {
+            if(strstr(rec[pos].Description, priorite_haute[i]) != NULL) {
+                rec[pos].priorite = 2;
+                break;
+            } else if(strstr(rec[pos].Description, priorite_moyenne[i]) != NULL) {
+                rec[pos].priorite = 1;
+                break;
+            }
+        }  
+
         // Validation de Categorie -------
         int Categorie_count = 0;
         while(1){
@@ -1101,9 +1123,8 @@ int verifier_duree(time_t heure_de_debut) {
     time_t heure_actuelle = time(NULL);
     double difference = difftime(heure_actuelle, heure_de_debut);
     
-    // 1min => 60 secondes
     // 24 heures => 86400 secondes
-    return difference >= 60;
+    return difference >= 30;
 
 }
 
@@ -1304,6 +1325,7 @@ void Statistiques_Rapport(){
 
 }
 
+
 int Enregistrement() {
 
     FILE *users_file = fopen("Users.bin", "wb");
@@ -1316,6 +1338,18 @@ int Enregistrement() {
 
     size_t valid_user = fwrite(user, sizeof(Utilisateurs), Taille, users_file);
     size_t valid_rec = fwrite(rec, sizeof(Reclamation), R_Taille, rec_file);
+
+    if (valid_user != Taille || valid_rec != R_Taille){
+        printf("\n\t\033[31m ---- Erreur à l'ecriture dans le fichier ---- \033[0m\n");
+        fclose(users_file);
+        fclose(rec_file);
+        return 1; 
+    }
+
+    if (fclose(users_file) != 0 || fclose(rec_file) != 0) {
+        printf("\n\t\033[31m ---- Erreur a La Fermeture du fichier ---- \033[0m\n");
+        return 1;
+    }
 
     return 0;
     
