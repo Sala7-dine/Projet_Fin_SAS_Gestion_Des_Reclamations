@@ -92,6 +92,8 @@ void Statistiques_Rapport();
 // Sauvgarder des donnee
 int Enregistrement();
 
+// Recuperation des donnee
+void Recuperation();
 
 int main(){
 
@@ -104,6 +106,8 @@ int main(){
     user = malloc(Taille*sizeof(Utilisateurs));
     rec = malloc(R_Taille*sizeof(Reclamation));
 
+
+    Recuperation();
 
     while(quitter != 0){
 
@@ -817,7 +821,7 @@ int Ajouter_un_Reclamation(){
     struct tm tm = *localtime(&t);
 
     // La date de creation
-    strftime(rec[R_Taille].date, 100, "%d-%m-%Y %H:%M", &tm);
+    strftime(rec[R_Taille].date, 100, "%d-%m-%Y %H", &tm);
     rec[R_Taille].heure_de_debut = time(NULL);
 
     rec[R_Taille].differance = 0;
@@ -847,7 +851,6 @@ int Modifier_un_Reclamation(){
                 break;
             }  
         }
-
 
         if(exist){
             break;
@@ -977,11 +980,19 @@ int Supprimer_un_Reclamation(){
         return 2;
     }
 
-    for(int i=pos;i<R_Taille - 1;i++){
+    if (verifier_duree(rec[pos].heure_de_debut) && user[index_user].Role == 0){
+
+        printf("\n\t \x1b[33m !! Le Delai Pour La Suppression est Expire !! \x1b[0m\n");
+        return 0;
+    }else{
+
+        for(int i=pos;i<R_Taille - 1;i++){
             rec[i] = rec[i+1];
+        }
+        R_Taille--;
+        return 1;
     }
-    R_Taille--;
-    return 1;
+    
 
 }
 
@@ -1255,18 +1266,40 @@ void Rechercher_Reclamation(){
 void Statistiques_Rapport(){
 
     int nombre_total = R_Taille;
+    int nombre_total_aujourdui = 0;
     int total_resolu = 0;
+    int total_resolu_aujourdoui = 0;
     int differance_total = 0;
     int taux_resolution = 0, moyenne_traitement = 0;
     int i;
+    time_t date = time(NULL);
+    
 
     if (nombre_total > 0) {
+
+        // Totaaal Reclamation
         for (i = 0; i < nombre_total; i++) {
           
             if (rec[i].Status != NULL && strcmp(rec[i].Status, "Resolu") == 0) {
                 total_resolu++;
                 if (rec[i].differance > 0) {
                     differance_total += rec[i].differance;
+                }
+            }
+        }
+
+        // Totaaal Reclamation d'aujourdoui
+        for (i = 0; i < nombre_total; i++) {
+            
+            struct tm *tm1 = localtime(&date);
+            struct tm *tm2 = localtime(&rec[i].heure_de_debut);
+
+            if (tm1->tm_year == tm2->tm_year &&
+                tm1->tm_mon == tm2->tm_mon &&
+                tm1->tm_mday == tm2->tm_mday) {
+                nombre_total_aujourdui++;
+            if (rec[i].Status != NULL && strcmp(rec[i].Status, "Resolu") == 0) {
+                  total_resolu_aujourdoui++;
                 }
             }
         }
@@ -1300,6 +1333,7 @@ void Statistiques_Rapport(){
 
     if (file != NULL)
     {
+        
         fprintf(file, "\n"
 
                 "============================================================\n"
@@ -1309,22 +1343,95 @@ void Statistiques_Rapport(){
                 "| par nos clients, ainsi que l'etat de leur resolution.    |\n"
                 "| Votre efficacite garantit leur satisfaction.             |\n"
                 "============================================================\n"
+
+                "============================================================\n"
                 "|                   RAPPORT JOURNALIER                     |\n"
                 "============================================================\n"
                 "------------------------------------------------------------\n"
-                "| TOTAL DE RECLAMATIONS         : %d                      |\n"
-                "| RESOLUTION DES RECLAMATIONS   : %d %                      |\n"
-                "| DELAI MOYEN DE TRAITEMENT     : %d seconde               |\n"
+                "| TOTAL DE RECLAMATIONS         : %d                        |\n"
+                "| RESOLUTION DES RECLAMATIONS   : %d %                     |\n"
+                "| DELAI MOYEN DE TRAITEMENT     : %d seconde              |\n"
+                "------------------------------------------------------------\n"
+                
+                "============================================================\n"
+                "|                  RECLAMTIONS D'AUJOURDOUI                |\n"
+                "============================================================\n"
+                "------------------------------------------------------------\n"
+                "| RECLAMATIONS D'AUJOURDOUI     : %d                        |\n"
+                "| RECLAMATION RESOLU            : %d                        |\n"
                 "------------------------------------------------------------\n"
                 "|         Fin du rapport journalier d'aujourd'hui          |\n"
                 "============================================================\n"
-                , nombre_total ,taux_resolution ,  moyenne_traitement);
+                
+                , nombre_total ,taux_resolution ,  moyenne_traitement , 
+                nombre_total_aujourdui ,  total_resolu_aujourdoui);
         fclose(file);
     }
 
 
 }
 
+void Recuperation() {
+
+    FILE *users_file = fopen("Users.bin", "rb");
+    FILE *rec_file = fopen("Reclamations.bin", "rb");
+
+    if (users_file == NULL || users_file == NULL) {
+        return;
+    }
+
+    // La Taille d'uetilisateurs
+    fseek(users_file, 0, SEEK_END);
+    long taille_user = ftell(users_file);
+    if (taille_user < 0) {
+        printf(RED "\n\t --- Erreur --- \n" RESET);
+        fclose(users_file);
+        return;
+    }
+    rewind(users_file);
+
+    // La Taille de Reclamatino
+    fseek(rec_file, 0, SEEK_END);
+    long taille_rec = ftell(rec_file);
+    if (taille_rec < 0) {
+        perror(RED "\n\t --- Erreur " RESET);
+        fclose(rec_file);
+        return;
+    }
+    rewind(rec_file);
+
+    // Calculer le nombre d'utilisateur
+    Taille = taille_user / sizeof(Utilisateurs);
+
+    // Calculer le nombre d'utilisateur
+    R_Taille = taille_rec / sizeof(Reclamation);
+
+    user = (Utilisateurs *)calloc(Taille, sizeof(Utilisateurs));
+    rec = (Reclamation *)calloc(R_Taille, sizeof(Reclamation));
+
+    if (user == NULL || rec == NULL) {
+        perror(RED "\n\t --- Erreur " RESET);
+        fclose(users_file);
+        fclose(rec_file);
+    }
+
+    size_t userLus = fread(user, sizeof(Utilisateurs), Taille, users_file);
+    size_t recLus = fread(rec, sizeof(Reclamation), R_Taille, rec_file);
+
+    if (userLus != Taille  || recLus != R_Taille) {
+        perror(RED "\n\t --- Erreur " RESET);
+        free(user);
+        free(rec);
+        fclose(users_file);
+        fclose(rec_file);
+    }
+
+
+    fclose(users_file);
+    fclose(rec_file);
+
+    return;
+}
 
 int Enregistrement() {
 
