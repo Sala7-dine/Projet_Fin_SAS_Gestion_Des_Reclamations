@@ -89,7 +89,8 @@ void Rechercher_Reclamation();
 // Rapport et Statistiqueq
 void Statistiques_Rapport();
 
-
+// Sauvgarder des donnee
+int Enregistrement();
 
 int main(){
 
@@ -101,8 +102,6 @@ int main(){
 
     user = malloc(Taille*sizeof(Utilisateurs));
     rec = malloc(R_Taille*sizeof(Reclamation));
-
-
 
 
     while(quitter != 0){
@@ -154,7 +153,7 @@ int main(){
                 printf("\n\n\t \x1b[31m ******** AU REVOIRE **********  \x1b[0m \n\n\n");
                 auth = 0;
                 quitter = 0;
-
+                Enregistrement();
                 break;
         
         default:
@@ -1275,7 +1274,7 @@ void Statistiques_Rapport(){
 
 
 
-    char file_name[20] = "Rapport.text";
+    char file_name[20] = "Rapport.txt";
     FILE *file = fopen(file_name, "w");
 
     if (file != NULL)
@@ -1305,3 +1304,19 @@ void Statistiques_Rapport(){
 
 }
 
+int Enregistrement() {
+
+    FILE *users_file = fopen("Users.bin", "wb");
+    FILE *rec_file = fopen("Reclamations.bin", "wb");
+
+    if (users_file == NULL || rec_file == NULL) {
+        printf("\n\t\033[31m ---- Erreur a l'ouverture du fichier ---- \033[0m\n");
+        return 1;
+    }
+
+    size_t valid_user = fwrite(user, sizeof(Utilisateurs), Taille, users_file);
+    size_t valid_rec = fwrite(rec, sizeof(Reclamation), R_Taille, rec_file);
+
+    return 0;
+    
+}
