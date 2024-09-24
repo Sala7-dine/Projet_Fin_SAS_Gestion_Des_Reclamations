@@ -97,11 +97,12 @@ void Recuperation();
 
 int main(){
 
-    printf("\n\t  \x1b[35m========================================\x1b[0m");
-    printf("\n\t  \x1b[35m||      BIENVENU A L'APPLICATION      ||\x1b[0m\n");
-    printf("\t  \x1b[35m========================================\x1b[0m\n");
+    printf("\n\t\t\t\t\t\t   \x1b[35m========================================\x1b[0m");
+    printf("\n\t\t\t\t\t\t   \x1b[35m||      BIENVENU A L'APPLICATION      ||\x1b[0m\n");
+    printf("\t\t\t\t\t\t   \x1b[35m========================================\x1b[0m\n");
 
     int auth = -1 , choix = 0  , r_choix = 0 , choix_admin = 0 , choix_agent = 0 , quitter = -1;
+
 
     user = malloc(Taille*sizeof(Utilisateurs));
     rec = malloc(R_Taille*sizeof(Reclamation));
@@ -116,16 +117,16 @@ int main(){
         do{
         // Authentification ---------------------- 
             printf("\n"
-               "\t==============================================\n\t"
-               "||             \033[36m AUTHENTIFICATION \033[0m           ||\n"
-               "\t==============================================\n\t"
-               "||\t                                    ||\n\t"
-               "||\t      [1] INSCRIPTION               ||\n\t"
-               "||\t      [2] CONNEXION                 ||\n\t"
-               "||\t      [\033[33m0\033[0m] \033[33mQUITTER\033[0m                   ||\n"
-               "\t||                                          ||\n"
-               "\t==============================================\n\t"
-               "\n\tTapez votre choix => : ");
+               "\t\t\t\t\t\t==============================================\n\t "
+               "\t\t\t\t\t||             \033[36m AUTHENTIFICATION \033[0m           ||\n"
+               "\t\t\t\t\t\t==============================================\n\t "
+               "\t\t\t\t\t||                                          ||\n\t "
+               "\t\t\t\t\t||            [1] INSCRIPTION               ||\n\t "
+               "\t\t\t\t\t||            [2] CONNEXION                 ||\n\t "
+               "\t\t\t\t\t||            [\033[33m0\033[0m] \033[33mQUITTER\033[0m                   ||\n"
+               "\t\t\t\t\t\t||                                          ||\n"
+               "\t\t\t\t\t\t==============================================\n\t "
+               "\n\t\t\t\t\t\t Tapez votre choix => : ");
             scanf("%d" , &auth);
             while(getchar()  != '\n'); 
 
@@ -134,28 +135,28 @@ int main(){
             case 1 :
                 int valid_inscr = Incription();
                 if(valid_inscr){
-                    printf("\n\t \x1b[32m--- Inscription Reussite ---\x1b[0m\n");
+                    printf("\n\t\t\t\t\t\t  \x1b[32m--- Inscription Reussite ---\x1b[0m\n");
                     index_user = Taille;
                     Taille++;
                     connect = 1;
                     auth = 0;
-                } else printf("\n\t \x1b[31m--- Inscription Invalid ---\x1b[0m \n");
+                } else printf("\n\t\t\t\t\t\t  \x1b[31m--- Inscription Invalid ---\x1b[0m \n");
                 break;
             case 2 :
                 int index = Connexion();
                 if(index >= 0){
-                    printf("\n\t \x1b[32m--- Connexion Reussite ---\x1b[0m\n");
+                    printf("\n\t\t\t\t\t\t  \x1b[32m--- Connexion Reussite ---\x1b[0m\n");
                     index_user = index;
                     connect = 1;
                     auth = 0;
                 } 
                 else {
-                    printf("\n\t \x1b[31m Veuillez Essayer apres 10s ... \x1b[0m \n");
+                    printf("\n\t\t\t\t\t\t  \x1b[31m Patientez 10 secondes avant de RessaYer ... \x1b[0m \n");
                     Sleep(10000);
                 } 
                 break;
             case 0 :
-                printf("\n\n\t \x1b[31m ******** AU REVOIRE **********  \x1b[0m \n\n\n");
+                printf("\n\n\t\t\t\t\t\t  \x1b[31m ******** AU REVOIRE **********  \x1b[0m \n\n\n");
                 auth = 0;
                 quitter = 0;
                 Enregistrement();
@@ -175,7 +176,7 @@ int main(){
         int valid_choix = Choix(&r_choix);
 
         if (valid_choix == 0 || r_choix < 1 || r_choix > 5){
-            printf("\n\t \x1b[31m---- Choix Invalid ----\x1b[0m \n");
+            printf("\n\t\t\t\t\t\t  \x1b[31m---- Choix Invalid ----\x1b[0m \n");
         }else {
 
              switch (r_choix){
@@ -183,10 +184,10 @@ int main(){
                 case 1:
                     int valid_Ajoute = Ajouter_un_Reclamation();
                     if(valid_Ajoute){
-                        printf("\n\t \x1b[32m--- Reclamation a ete Ajoute avec Succes ----\x1b[0m \n");
+                        printf("\n\t\t\t\t\t\t  \x1b[32m--- Reclamation a ete Ajoute avec Succes ----\x1b[0m \n");
                         R_Taille++;
                     }else{
-                        printf("\n\t \x1b[31m--- Erreur d'ajoutr ----\x1b[0m \n");
+                        printf("\n\t\t\t\t\t\t  \x1b[31m--- Erreur d'ajoutr ----\x1b[0m \n");
                     }
                 break;
                 case 2:
@@ -195,19 +196,19 @@ int main(){
                 case 3 :
                     int valid_mod = Modifier_un_Reclamation();
                     if(valid_mod){
-                        printf("\n\t \x1b[32m--- La Reclamation a ete Modifiier avec Succes ----\x1b[0m \n");
+                        printf("\n\t\t\t\t\t\t  \x1b[32m--- La Reclamation a ete Modifiier avec Succes ----\x1b[0m \n");
                     }else{
-                        printf("\n\t \x1b[31m--- Erreur lors de Modification ----\x1b[0m \n");
+                        printf("\n\t\t\t\t\t\t  \x1b[31m--- Erreur lors de Modification ----\x1b[0m \n");
                     }
                     break;
                 case 4 :
                     int valid_sup = Supprimer_un_Reclamation();
                     if(valid_sup == 1){
-                        printf("\n\t \x1b[32m--- La Reclamation a ete Supprimer avec Succes ----\x1b[0m \n");
+                        printf("\n\t\t\t\t\t\t  \x1b[32m--- La Reclamation a ete Supprimer avec Succes ----\x1b[0m \n");
                     }else if(valid_sup == 2){
-                        printf("\n\t \x1b[33m--- Aucun Recalamtion a Supprimer --- \x1b[0m\n");
+                        printf("\n\t\t\t\t\t\t  \x1b[33m--- Aucun Recalamtion a Supprimer --- \x1b[0m\n");
                     }else{
-                        printf("\n\t \x1b[31m--- Erreur lors de Suppression ----\x1b[0m \n");
+                        printf("\n\t\t\t\t\t\t  \x1b[31m--- Erreur lors de Suppression ----\x1b[0m \n");
                     }
                     break;
                 case 5 :
@@ -230,7 +231,7 @@ int main(){
         int valid_choix = Choix_Agent(&choix_agent);
 
         if (valid_choix == 0 || choix_agent < 1 || choix_agent > 7){
-            printf("\n\t \x1b[31m---- Choix Invalid ----\x1b[0m \n");
+            printf("\n\t\t\t\t\t\t  \x1b[31m---- Choix Invalid ----\x1b[0m \n");
         }else{
 
              switch (choix_agent){
@@ -238,10 +239,10 @@ int main(){
                 case 1:
                     int valid_Ajoute = Ajouter_un_Reclamation();
                     if(valid_Ajoute){
-                        printf("\n\t \x1b[32m--- Le Contact a ete Ajoute avec Succes ----\x1b[0m \n");
+                        printf("\n\t\t\t\t\t\t  \x1b[32m--- Le Contact a ete Ajoute avec Succes ----\x1b[0m \n");
                         R_Taille++;
                     }else{
-                        printf("\n\t \x1b[31m--- Erreur d'ajoutr ----\x1b[0m \n");
+                        printf("\n\t\t\t\t\t\t  \x1b[31m--- Erreur d'ajoutr ----\x1b[0m \n");
                     }
                 break;
                 case 2:
@@ -250,19 +251,19 @@ int main(){
                 case 3 :
                     int valid_mod = Modifier_un_Reclamation();
                     if(valid_mod){
-                        printf("\n\t \x1b[32m--- La Reclamation a ete Modifiier avec Succes ----\x1b[0m \n");
+                        printf("\n\t\t\t\t\t\t  \x1b[32m--- La Reclamation a ete Modifiier avec Succes ----\x1b[0m \n");
                     }else{
-                        printf("\n\t \x1b[31m--- Erreur lors de Modification ----\x1b[0m \n");
+                        printf("\n\t\t\t\t\t\t  \x1b[31m--- Erreur lors de Modification ----\x1b[0m \n");
                     }
                     break;
                 case 4 :
                     int valid_sup = Supprimer_un_Reclamation();
                     if(valid_sup == 1){
-                        printf("\n\t \x1b[32m--- La Reclamation a ete Supprimer avec Succes ----\x1b[0m \n");
+                        printf("\n\t\t\t\t\t\t  \x1b[32m--- La Reclamation a ete Supprimer avec Succes ----\x1b[0m \n");
                     }else if(valid_sup == 2){
-                        printf("\n\t \x1b[33m--- Aucun Recalamtion a Supprimer --- \x1b[0m\n");
+                        printf("\n\t\t\t\t\t\t  \x1b[33m--- Aucun Recalamtion a Supprimer --- \x1b[0m\n");
                     }else{
-                        printf("\n\t \x1b[31m--- Erreur lors de Suppression ----\x1b[0m \n");
+                        printf("\n\t\t\t\t\t\t  \x1b[31m--- Erreur lors de Suppression ----\x1b[0m \n");
                     }
                     break;
                 case 5 :
@@ -271,9 +272,9 @@ int main(){
                 case 6 :
                         int valid_status = Modifier_Status_Utilisateur();
                          if(valid_status){
-                            printf("\n\t \x1b[32m--- Le Status de Reclamation a ete modifier avec succes ----\x1b[0m \n");
+                            printf("\n\t\t\t\t\t\t  \x1b[32m--- Le Status de Reclamation a ete modifier avec succes ----\x1b[0m \n");
                         }else{
-                            printf("\n\t \x1b[31m--- Erreur lors de Modification de Recalamtion ----\x1b[0m \n");
+                            printf("\n\t\t\t\t\t\t  \x1b[31m--- Erreur lors de Modification de Recalamtion ----\x1b[0m \n");
                     }
                     break;
                 case 7 :
@@ -293,7 +294,7 @@ int main(){
         int valid_choix = Choix_Admin(&choix_admin);
 
         if (valid_choix == 0 || choix_admin < 1 || choix_admin > 13){
-            printf("\n\t \x1b[31m---- Choix Invalid ----\x1b[0m \n");
+            printf("\n\t\t\t\t\t\t  \x1b[31m---- Choix Invalid ----\x1b[0m \n");
         }else{
 
              switch (choix_admin){
@@ -301,10 +302,10 @@ int main(){
                 case 1:
                     int valid_Ajoute = Ajouter_un_Reclamation();
                     if(valid_Ajoute){
-                        printf("\n\t \x1b[32m--- Le Contact a ete Ajoute avec Succes ----\x1b[0m \n");
+                        printf("\n\t\t\t\t\t\t  \x1b[32m--- Le Contact a ete Ajoute avec Succes ----\x1b[0m \n");
                         R_Taille++;
                     }else{
-                        printf("\n\t \x1b[31m--- Erreur d'ajoutr ----\x1b[0m \n");
+                        printf("\n\t\t\t\t\t\t  \x1b[31m--- Erreur d'ajoutr ----\x1b[0m \n");
                     }
                 break;
                 case 2:
@@ -314,19 +315,19 @@ int main(){
                 case 3 :
                     int valid_mod = Modifier_un_Reclamation();
                     if(valid_mod){
-                        printf("\n\t \x1b[32m--- La Reclamation a ete Modifiier avec Succes ----\x1b[0m \n");
+                        printf("\n\t\t\t\t\t\t  \x1b[32m--- La Reclamation a ete Modifiier avec Succes ----\x1b[0m \n");
                     }else{
-                        printf("\n\t \x1b[31m--- Erreur lors de Modification ----\x1b[0m \n");
+                        printf("\n\t\t\t\t\t\t  \x1b[31m--- Erreur lors de Modification ----\x1b[0m \n");
                     }
                     break;
                 case 4 :
                     int valid_sup = Supprimer_un_Reclamation();
                     if(valid_sup == 1){
-                        printf("\n\t \x1b[32m--- La Reclamation a ete Supprimer avec Succes ----\x1b[0m \n");
+                        printf("\n\t\t\t\t\t\t  \x1b[32m--- La Reclamation a ete Supprimer avec Succes ----\x1b[0m \n");
                     }else if(valid_sup == 2){
-                        printf("\n\t \x1b[33m--- Aucun Recalamtion a Supprimer --- \x1b[0m\n");
+                        printf("\n\t\t\t\t\t\t  \x1b[33m--- Aucun Recalamtion a Supprimer --- \x1b[0m\n");
                     }else{
-                        printf("\n\t \x1b[31m--- Erreur lors de Suppression ----\x1b[0m \n");
+                        printf("\n\t\t\t\t\t\t  \x1b[31m--- Erreur lors de Suppression ----\x1b[0m \n");
                     }
                     break;
                 case 5 :
@@ -335,17 +336,17 @@ int main(){
                 case 6 :
                         int valid_role = Modifier_Role_Utilisateur();
                          if(valid_role){
-                            printf("\n\t \x1b[32m--- Le Role D'utilisateur a ete modifier avec succes ----\x1b[0m \n");
+                            printf("\n\t\t\t\t\t\t  \x1b[32m--- Le Role D'utilisateur a ete modifier avec succes ----\x1b[0m \n");
                         }else{
-                            printf("\n\t \x1b[31m--- Erreur lors de Modification de role ----\x1b[0m \n");
+                            printf("\n\t\t\t\t\t\t  \x1b[31m--- Erreur lors de Modification de role ----\x1b[0m \n");
                     }
                     break;
                 case 7 :
                         int valid_status = Modifier_Status_Utilisateur();
                          if(valid_status){
-                            printf("\n\t \x1b[32m--- Le Status de Reclamation a ete modifier avec succes ----\x1b[0m \n");
+                            printf("\n\t\t\t\t\t\t  \x1b[32m--- Le Status de Reclamation a ete modifier avec succes ----\x1b[0m \n");
                         }else{
-                            printf("\n\t \x1b[31m--- Erreur lors de Modification de Recalamtion ----\x1b[0m \n");
+                            printf("\n\t\t\t\t\t\t  \x1b[31m--- Erreur lors de Modification de Recalamtion ----\x1b[0m \n");
                     }
                     break;
                 case 8 :
@@ -375,22 +376,22 @@ int main(){
 int Choix(int *choix){
     int ch;
         printf("\n");
-        printf(CYAN "\t=========================================================\n\t" RESET);
-        printf( "\033[36m||\033[0m                  \x1b[32m Espace Client \033[0m                    \033[36m||\033[0m \n" );
-        printf(CYAN "\t=========================================================\n\t" RESET);
-        printf( "\033[36m||\033[0m\t                                               \033[36m||\033[0m\n\t");
-        printf( "\033[36m||\033[0m\t \x1b[33m[1] Ajouter un Reclamation \x1b[0m                   \033[36m||\033[0m\n\t" );
-        printf( "\033[36m||\033[0m\t                                               \033[36m||\033[0m\n\t");
-        printf( "\033[36m||\033[0m\t \x1b[33m[2] Afficher la list des Reclamation\x1b[0m          \033[36m||\033[0m\n\t" );
-        printf( "\033[36m||\033[0m\t                                               \033[36m||\033[0m\n\t");
-        printf( "\033[36m||\033[0m\t \x1b[33m[3] Modifier un Reclamation \x1b[0m                  \033[36m||\033[0m\n\t" );
-        printf( "\033[36m||\033[0m\t                                               \033[36m||\033[0m\n\t");
-        printf( "\033[36m||\033[0m\t \x1b[33m[4] Supprimer un Reclamation  \x1b[0m                \033[36m||\033[0m\n\t" );
-        printf( "\033[36m||\033[0m\t                                               \033[36m||\033[0m\n\t");
-        printf( "\033[36m||\033[0m\t \x1b[31m[5] Deconnecter \x1b[0m                              \033[36m||\033[0m\n");
-        printf( "\t\033[36m||\033[0m\t                                               \033[36m||\033[0m\n");
-        printf(CYAN "\t=========================================================\n\t" RESET);
-        printf("\n\tTapez votre choix => : ");
+        printf(CYAN "\t\t\t\t\t\t=========================================================\n\t " RESET);
+        printf( "\t\t\t\t\t\033[36m||\033[0m                  \x1b[32m Espace Client \033[0m                    \033[36m||\033[0m \n" );
+        printf(CYAN "\t\t\t\t\t\t=========================================================\n\t " RESET);
+        printf( "\t\t\t\t\t\033[36m||\033[0m                                                     \033[36m||\033[0m\n\t ");
+        printf( "\t\t\t\t\t\033[36m||\033[0m         \x1b[33m[1] Ajouter un Reclamation \x1b[0m                 \033[36m||\033[0m\n\t " );
+        printf( "\t\t\t\t\t\033[36m||\033[0m                                                     \033[36m||\033[0m\n\t ");
+        printf( "\t\t\t\t\t\033[36m||\033[0m         \x1b[33m[2] Afficher la list des Reclamation\x1b[0m        \033[36m||\033[0m\n\t " );
+        printf( "\t\t\t\t\t\033[36m||\033[0m                                                     \033[36m||\033[0m\n\t ");
+        printf( "\t\t\t\t\t\033[36m||\033[0m         \x1b[33m[3] Modifier un Reclamation \x1b[0m                \033[36m||\033[0m\n\t " );
+        printf( "\t\t\t\t\t\033[36m||\033[0m                                                     \033[36m||\033[0m\n\t ");
+        printf( "\t\t\t\t\t\033[36m||\033[0m         \x1b[33m[4] Supprimer un Reclamation  \x1b[0m              \033[36m||\033[0m\n\t " );
+        printf( "\t\t\t\t\t\033[36m||\033[0m                                                     \033[36m||\033[0m\n\t ");
+        printf( "\t\t\t\t\t\033[36m||\033[0m         \x1b[31m[5] Deconnecter \x1b[0m                            \033[36m||\033[0m\n");
+        printf( "\t\t\t\t\t\t\033[36m||\033[0m                                                     \033[36m||\033[0m\n");
+        printf(CYAN "\t\t\t\t\t\t=========================================================\n\t " RESET);
+        printf("\n\t\t\t\t\t\t Tapez votre choix => : ");
                ch = scanf("%d", choix);
                while(getchar() != '\n');
                if(ch) return ch;
@@ -399,27 +400,27 @@ int Choix(int *choix){
 
 int Choix_Agent(int *choix){
             int ch;
-            printf("\n");
-            printf(CYAN "\t=========================================================\n\t" RESET);
-            printf( "\033[36m||\033[0m            \x1b[32m Espace D'Agent de Reclamation \033[0m          \033[36m||\033[0m \n" );
-            printf(CYAN "\t=========================================================\n\t" RESET);
-            printf( "\033[36m||\033[0m\t                                               \033[36m||\033[0m\n\t");
-            printf( "\033[36m||\033[0m\t \x1b[33m[1] Ajouter un Reclamation \x1b[0m                   \033[36m||\033[0m\n\t" );
-            printf( "\033[36m||\033[0m\t                                               \033[36m||\033[0m\n\t");
-            printf( "\033[36m||\033[0m\t \x1b[33m[2] Afficher la list des Reclamation\x1b[0m          \033[36m||\033[0m\n\t" );
-            printf( "\033[36m||\033[0m\t                                               \033[36m||\033[0m\n\t");
-            printf( "\033[36m||\033[0m\t \x1b[33m[3] Modifier un Reclamation \x1b[0m                  \033[36m||\033[0m\n\t" );
-            printf( "\033[36m||\033[0m\t                                               \033[36m||\033[0m\n\t");
-            printf( "\033[36m||\033[0m\t \x1b[33m[4] Supprimer un Reclamation  \x1b[0m                \033[36m||\033[0m\n\t" );
-            printf( "\033[36m||\033[0m\t                                               \033[36m||\033[0m\n\t");
-            printf( "\033[36m||\033[0m\t \x1b[33m[5] Recherhcer Reclamation  \x1b[0m                  \033[36m||\033[0m\n\t" );
-            printf( "\033[36m||\033[0m\t                                               \033[36m||\033[0m\n\t");
-            printf( "\033[36m||\033[0m\t \x1b[33m[6] Modifier Le Status d'une Reclamation \x1b[0m     \033[36m||\033[0m\n\t" );
-            printf( "\033[36m||\033[0m\t                                               \033[36m||\033[0m\n\t");
-            printf( "\033[36m||\033[0m\t \x1b[31m[7] Deconnecter \x1b[0m                              \033[36m||\033[0m\n");
-            printf( "\t\033[36m||\033[0m\t                                               \033[36m||\033[0m\n");
-            printf(CYAN "\t=========================================================\n\t" RESET);
-            printf("\n\tTapez votre choix => : ");
+             printf("\n");
+            printf(CYAN "\t\t\t\t\t\t=========================================================\n\t " RESET);
+            printf( "\t\t\t\t\t\033[36m||\033[0m            \x1b[32m Espace D'Agent de Reclamation \033[0m          \033[36m||\033[0m \n" );
+            printf(CYAN "\t\t\t\t\t\t=========================================================\n\t " RESET);
+            printf( "\t\t\t\t\t\033[36m||\033[0m                                                     \033[36m||\033[0m\n\t ");
+            printf( "\t\t\t\t\t\033[36m||\033[0m       \x1b[33m[1] Ajouter un Reclamation \x1b[0m                   \033[36m||\033[0m\n\t " );
+            printf( "\t\t\t\t\t\033[36m||\033[0m                                                     \033[36m||\033[0m\n\t ");
+            printf( "\t\t\t\t\t\033[36m||\033[0m       \x1b[33m[2] Afficher la list des Reclamation\x1b[0m          \033[36m||\033[0m\n\t " );
+            printf( "\t\t\t\t\t\033[36m||\033[0m                                                     \033[36m||\033[0m\n\t ");
+            printf( "\t\t\t\t\t\033[36m||\033[0m       \x1b[33m[3] Modifier un Reclamation \x1b[0m                  \033[36m||\033[0m\n\t " );
+            printf( "\t\t\t\t\t\033[36m||\033[0m                                                     \033[36m||\033[0m\n\t ");
+            printf( "\t\t\t\t\t\033[36m||\033[0m       \x1b[33m[4] Supprimer un Reclamation  \x1b[0m                \033[36m||\033[0m\n\t " );
+            printf( "\t\t\t\t\t\033[36m||\033[0m                                                     \033[36m||\033[0m\n\t ");
+            printf( "\t\t\t\t\t\033[36m||\033[0m       \x1b[33m[5] Recherhcer Reclamation  \x1b[0m                  \033[36m||\033[0m\n\t " );
+            printf( "\t\t\t\t\t\033[36m||\033[0m                                                     \033[36m||\033[0m\n\t ");
+            printf( "\t\t\t\t\t\033[36m||\033[0m       \x1b[33m[6] Modifier Le Status d'une Reclamation \x1b[0m     \033[36m||\033[0m\n\t " );
+            printf( "\t\t\t\t\t\033[36m||\033[0m                                                     \033[36m||\033[0m\n\t ");
+            printf( "\t\t\t\t\t\033[36m||\033[0m       \x1b[31m[7] Deconnecter \x1b[0m                              \033[36m||\033[0m\n");
+            printf( "\t\t\t\t\t\t\033[36m||\033[0m                                                     \033[36m||\033[0m\n");
+            printf(CYAN "\t\t\t\t\t\t=========================================================\n\t " RESET);
+            printf("\n\t\t\t\t\t\t Tapez votre choix => : ");
             ch = scanf("%d", choix);
             while(getchar() != '\n');
             if(ch) return ch;
@@ -429,30 +430,30 @@ int Choix_Agent(int *choix){
 int Choix_Admin(int *choix){
 
     printf("\n");
-    printf(CYAN "\t=========================================================\n\t" RESET);
-    printf( "\033[36m||\033[0m              \x1b[32m Espace Administrateur \033[0m                \033[36m||\033[0m \n" );
-    printf(CYAN "\t=========================================================\n\t" RESET);
-    printf( "\033[36m||\033[0m\t                                               \033[36m||\033[0m\n\t");
-    printf( "\033[36m||\033[0m\t \x1b[33m[1] Ajouter un Reclamation \x1b[0m                   \033[36m||\033[0m\n\t" );
-    printf( "\033[36m||\033[0m\t                                               \033[36m||\033[0m\n\t");
-    printf( "\033[36m||\033[0m\t \x1b[33m[2] Afficher la list des Reclamation\x1b[0m          \033[36m||\033[0m\n\t" );
-    printf( "\033[36m||\033[0m\t                                               \033[36m||\033[0m\n\t");
-    printf( "\033[36m||\033[0m\t \x1b[33m[3] Modifier un Reclamation \x1b[0m                  \033[36m||\033[0m\n\t" );
-    printf( "\033[36m||\033[0m\t                                               \033[36m||\033[0m\n\t");
-    printf( "\033[36m||\033[0m\t \x1b[33m[4] Supprimer un Reclamation  \x1b[0m                \033[36m||\033[0m\n\t" );
-    printf( "\033[36m||\033[0m\t                                               \033[36m||\033[0m\n\t");
-    printf( "\033[36m||\033[0m\t \x1b[33m[5] Rechercher un Reclamation  \x1b[0m               \033[36m||\033[0m\n\t" );
-    printf( "\033[36m||\033[0m\t                                               \033[36m||\033[0m\n\t");
-    printf( "\033[36m||\033[0m\t \x1b[33m[6] Modifier Le Role d'un Utilisateur \x1b[0m        \033[36m||\033[0m\n\t" );
-    printf( "\033[36m||\033[0m\t                                               \033[36m||\033[0m\n\t");
-    printf( "\033[36m||\033[0m\t \x1b[33m[7] Modifier Le Status d'une Reclamation \x1b[0m     \033[36m||\033[0m\n\t" );
-    printf( "\033[36m||\033[0m\t                                               \033[36m||\033[0m\n\t");
-    printf( "\033[36m||\033[0m\t \x1b[33m[8] Statistiques et Rapports \x1b[0m                 \033[36m||\033[0m\n\t" );
-    printf( "\033[36m||\033[0m\t                                               \033[36m||\033[0m\n\t");
-    printf( "\033[36m||\033[0m\t \x1b[31m[9] Deconnecter \x1b[0m                              \033[36m||\033[0m\n");
-    printf( "\t\033[36m||\033[0m\t                                               \033[36m||\033[0m\n");
-    printf(CYAN "\t=========================================================\n\t" RESET);
-    printf("\n\tTapez votre choix => : ");
+    printf(CYAN "\t\t\t\t\t\t=========================================================\n\t " RESET);
+    printf( "\t\t\t\t\t\033[36m||\033[0m              \x1b[32m Espace Administrateur \033[0m                \033[36m||\033[0m \n\t     " );
+    printf(CYAN "\t\t\t\t\t=========================================================\n\t " RESET);
+    printf( "\t\t\t\t\t\033[36m||\033[0m                                                     \033[36m||\033[0m\n\t ");
+    printf( "\t\t\t\t\t\033[36m||\033[0m       \x1b[33m[1] Ajouter un Reclamation \x1b[0m                   \033[36m||\033[0m\n\t " );
+    printf( "\t\t\t\t\t\033[36m||\033[0m                                                     \033[36m||\033[0m\n\t ");
+    printf( "\t\t\t\t\t\033[36m||\033[0m       \x1b[33m[2] Afficher la list des Reclamation\x1b[0m          \033[36m||\033[0m\n\t " );
+    printf( "\t\t\t\t\t\033[36m||\033[0m                                                     \033[36m||\033[0m\n\t ");
+    printf( "\t\t\t\t\t\033[36m||\033[0m       \x1b[33m[3] Modifier un Reclamation \x1b[0m                  \033[36m||\033[0m\n\t " );
+    printf( "\t\t\t\t\t\033[36m||\033[0m                                                     \033[36m||\033[0m\n\t ");
+    printf( "\t\t\t\t\t\033[36m||\033[0m       \x1b[33m[4] Supprimer un Reclamation  \x1b[0m                \033[36m||\033[0m\n\t " );
+    printf( "\t\t\t\t\t\033[36m||\033[0m                                                     \033[36m||\033[0m\n\t ");
+    printf( "\t\t\t\t\t\033[36m||\033[0m       \x1b[33m[5] Rechercher un Reclamation  \x1b[0m               \033[36m||\033[0m\n\t " );
+    printf( "\t\t\t\t\t\033[36m||\033[0m                                                     \033[36m||\033[0m\n\t ");
+    printf( "\t\t\t\t\t\033[36m||\033[0m       \x1b[33m[6] Modifier Le Role d'un Utilisateur \x1b[0m        \033[36m||\033[0m\n\t " );
+    printf( "\t\t\t\t\t\033[36m||\033[0m                                                     \033[36m||\033[0m\n\t ");
+    printf( "\t\t\t\t\t\033[36m||\033[0m       \x1b[33m[7] Modifier Le Status d'une Reclamation \x1b[0m     \033[36m||\033[0m\n\t " );
+    printf( "\t\t\t\t\t\033[36m||\033[0m                                                     \033[36m||\033[0m\n\t ");
+    printf( "\t\t\t\t\t\033[36m||\033[0m       \x1b[33m[8] Statistiques et Rapports \x1b[0m                 \033[36m||\033[0m\n\t " );
+    printf( "\t\t\t\t\t\033[36m||\033[0m                                                     \033[36m||\033[0m\n\t ");
+    printf( "\t\t\t\t\t\033[36m||\033[0m       \x1b[31m[9] Deconnecter \x1b[0m                              \033[36m||\033[0m\n");
+    printf( "\t\t\t\t\t\t\033[36m||\033[0m                                                     \033[36m||\033[0m\n");
+    printf(CYAN "\t\t\t\t\t\t=========================================================\n\t " RESET);
+    printf("\n\t\t\t\t\t\t Tapez votre choix => : ");
 
     int chx = scanf("%d" , choix);
     while(getchar() != '\n');
@@ -469,18 +470,18 @@ int Incription(){
     user = realloc(user , (Taille + 1)*sizeof(Utilisateurs));
 
     if(user == NULL){
-        printf("\n\t \x1b[31m--- Erreur D'allocation ----\x1b[0m\n");
+        printf("\n\t\t\t\t\t\t \x1b[31m--- Erreur D'allocation ----\x1b[0m\n");
         return 0;
     }
 
     Utilisateurs user_inscr;
-    printf("\n\t \x1b[32m---- Inscription ----\x1b[0m \n");
+    printf("\n\t\t\t\t\t\t  \x1b[32m---- Inscription ----\x1b[0m \n");
     
     // Validation de nom -------
     int nom_count = 0;
     while(1){
         int user_exist = 0;
-        printf("\n\t -- Nom d'utilisateur : ");
+        printf("\n\t\t\t\t\t\t  -- Nom d'utilisateur : ");
         int valide_input = scanf(" %[^\n]s" , user_inscr.Nom);
         
         int i = 0 , valid_nom = 1;
@@ -509,17 +510,17 @@ int Incription(){
             return 0;
         }else if(user_exist){
             nom_count++;
-            printf("\n\t \x1b[33m-- Le Nom deja exist --\x1b[0m \n");
+            printf("\n\t\t\t\t\t\t  \x1b[33m-- Le Nom deja exist --\x1b[0m \n");
         }else{
             nom_count++;
-            printf("\n\t \x1b[31m-- Invalid Nom --\x1b[0m \n");
+            printf("\n\t\t\t\t\t\t  \x1b[31m-- Invalid Nom --\x1b[0m \n");
         }
     }
 
     // Validation d'email -------
     int email_count = 0; 
     while(1){
-        printf("\n\t -- Email   : ");
+        printf("\n\t\t\t\t\t\t  -- Email   : ");
         int valide_input = scanf(" %[^\n]s" , user_inscr.Email);
         while(getchar() != '\n');
 
@@ -544,14 +545,14 @@ int Incription(){
             return 0;
         }else{
             email_count++;
-            printf("\n\t \x1b[31m-- Invalid Email --\x1b[0m \n");
+            printf("\n\t\t\t\t\t\t  \x1b[31m-- Invalid Email --\x1b[0m \n");
         }
     }
     
     // Validation de Mot de Pass 
     while(1){
 
-        printf("\n\t -- Password   : ");
+        printf("\n\t\t\t\t\t\t  -- Password   : ");
         int valide_input = scanf(" %[^\n]s" , user_inscr.Password);
         
         int i = 0 , maj = 0 , min = 0 , chiffre = 0 , charactere = 0;
@@ -583,10 +584,10 @@ int Incription(){
             return 0;
         }else if(existe){
             nom_count++;
-            printf("\n\t \x1b[33m !!! Le nom ne doit pas etre dans le mot de passe  !!!\x1b[0m \n");  
+            printf("\n\t\t\t\t\t\t  \x1b[33m !!! Le nom ne doit pas etre dans le mot de passe  !!!\x1b[0m \n");  
         }else{
             nom_count++;
-            printf("\n\t \x1b[31m-- Invalid Password --\x1b[0m \n");
+            printf("\n\t\t\t\t\t\t  \x1b[31m-- Invalid Password --\x1b[0m \n");
         }       
 
     }
@@ -611,10 +612,10 @@ int Connexion(){
     int nom_count = 0;
     while(1){
         int valid_nom = 0 , valid_password = 0 , index = 0;
-        printf("\n\t -- Nom d'utilisateur : ");
+        printf("\n\t\t\t\t\t\t  -- Nom d'utilisateur : ");
         scanf(" %[^\n]s" , Nom);
 
-        printf("\n\t -- Password : ");
+        printf("\n\t\t\t\t\t\t  -- Password : ");
         scanf(" %[^\n]s" , Password);
 
         for(int i=0;i<Taille;i++){
@@ -634,7 +635,7 @@ int Connexion(){
             return -1;
         }else if(valid_nom == 0 || valid_password == 0) {
             nom_count++;
-            printf("\n\t \x1b[33m-- Nom ou mot de passe incorrect --\x1b[0m \n");
+            printf("\n\t\t\t\t\t\t  \x1b[33m-- Nom ou mot de passe incorrect --\x1b[0m \n");
         }
     }
 
@@ -645,7 +646,7 @@ int Connexion(){
 void Afficher_tout_les_Reclamation(){
 
     if(rec == NULL || R_Taille  == 0 ){
-        printf("\n\t \x1b[31m---- Aucun Reclamation a Afficher ----\x1b[0m\n");
+        printf("\n\t\t\t\t\t\t  \x1b[31m---- Aucun Reclamation a Afficher ----\x1b[0m\n");
         return; 
     }
 
@@ -663,21 +664,21 @@ void Afficher_tout_les_Reclamation(){
 
     for(int i=0;i<R_Taille;i++){
 
-            printf("\n\t \x1b[32m------ Reclamation %d ------\x1b[0m\n\n" , i+1);
-            printf("\t -- iD          : %d\n" , rec[i].id);
-            printf("\t -- Client      : %s\n" , user[rec[i].id_client].Nom);
-            printf("\t -- Motif       : %s\n" , rec[i].Motif);
-            printf("\t -- Catgorie    : %s\n" , rec[i].Categorie);
-            printf("\t -- Status      : %s\n" , rec[i].Status);
-            printf("\t -- Description : %s\n" , rec[i].Description);
-            if(rec[i].priorite == 2)printf("\t -- priorite    : Haute\n");
-            else if(rec[i].priorite == 1)printf("\t -- priorite    : Moyenne\n");
-            else if(rec[i].priorite == 0) printf("\t -- priorite    : Basse\n");
-            printf("\t -- Note        : %s\n" , rec[i].Note);
-            printf("\t -- Date        : %s\n" , rec[i].date);
-            if(user[rec[i].id_client].Role == 1) printf("\t -- Role        : Administrateur\n");
-            else if(user[rec[i].id_client].Role == 2) printf("\t -- Role        : Agent de Reclamation\n");
-            else if(user[rec[i].id_client].Role == 0) printf("\t -- Role        : Client\n");
+            printf("\n\t\t\t\t\t\t  \x1b[32m------ Reclamation %d ------\x1b[0m\n\n" , i+1);
+            printf("\t\t\t\t\t\t  -- iD          : %d\n" , rec[i].id);
+            printf("\t\t\t\t\t\t  -- Client      : %s\n" , user[rec[i].id_client].Nom);
+            printf("\t\t\t\t\t\t  -- Motif       : %s\n" , rec[i].Motif);
+            printf("\t\t\t\t\t\t  -- Catgorie    : %s\n" , rec[i].Categorie);
+            printf("\t\t\t\t\t\t  -- Status      : %s\n" , rec[i].Status);
+            printf("\t\t\t\t\t\t  -- Description : %s\n" , rec[i].Description);
+            if(rec[i].priorite == 2)printf("\t\t\t\t\t\t  -- priorite    : Haute\n");
+            else if(rec[i].priorite == 1)printf("\t\t\t\t\t\t  -- priorite    : Moyenne\n");
+            else if(rec[i].priorite == 0) printf("\t\t\t\t\t\t  -- priorite    : Basse\n");
+            printf("\t\t\t\t\t\t  -- Note        : %s\n" , rec[i].Note);
+            printf("\t\t\t\t\t\t  -- Date        : %s\n" , rec[i].date);
+            if(user[rec[i].id_client].Role == 1) printf("\t\t\t\t\t\t  -- Role        : Administrateur\n");
+            else if(user[rec[i].id_client].Role == 2) printf("\t\t\t\t\t\t  -- Role        : Agent de Reclamation\n");
+            else if(user[rec[i].id_client].Role == 0) printf("\t\t\t\t\t\t  -- Role        : Client\n");
             
     }
 
@@ -686,41 +687,41 @@ void Afficher_tout_les_Reclamation(){
 void Afficher_Reclamation(){
 
     if(rec == NULL || R_Taille  == 0 ){
-        printf("\n\t \x1b[31m---- Aucun Reclamation a Afficher ----\x1b[0m\n");
+        printf("\n\t\t\t\t\t\t  \x1b[31m---- Aucun Reclamation a Afficher ----\x1b[0m\n");
         return; 
     }
 
     int i , exist = 0 , index = 1;
     for(int i=0;i<R_Taille;i++){
         if(rec[i].id_client == index_user){
-            printf("\n\t \x1b[32m------ Reclamation %d ------\x1b[0m\n\n" , index);
-            printf("\t -- iD          : %d\n" , rec[i].id);
-            printf("\t -- Motif       : %s\n" , rec[i].Motif);
-            printf("\t -- Catgorie    : %s\n" , rec[i].Categorie);
-            printf("\t -- Status      : %s\n" , rec[i].Status);
-            printf("\t -- Description : %s\n" , rec[i].Description);
-            printf("\t -- Note        : %s\n" , rec[i].Note);
-            printf("\t -- Date        : %s\n" , rec[i].date);
+            printf("\n\t\t\t\t\t\t  \x1b[32m------ Reclamation %d ------\x1b[0m\n\n" , index);
+            printf("\t\t\t\t\t\t  -- iD          : %d\n" , rec[i].id);
+            printf("\t\t\t\t\t\t  -- Motif       : %s\n" , rec[i].Motif);
+            printf("\t\t\t\t\t\t  -- Catgorie    : %s\n" , rec[i].Categorie);
+            printf("\t\t\t\t\t\t  -- Status      : %s\n" , rec[i].Status);
+            printf("\t\t\t\t\t\t  -- Description : %s\n" , rec[i].Description);
+            printf("\t\t\t\t\t\t  -- Note        : %s\n" , rec[i].Note);
+            printf("\t\t\t\t\t\t  -- Date        : %s\n" , rec[i].date);
             exist = 1;
             index += 1;
         }
     }
 
-    if(exist == 0) printf("\n\t \x1b[31m---- Aucun Reclamation a Afficher ----\x1b[0m\n");
+    if(exist == 0) printf("\n\t\t\t\t\t\t  \x1b[31m---- Aucun Reclamation a Afficher ----\x1b[0m\n");
     
 }
 
 void Afficher_une_Reclamation(Reclamation r , int i){
 
-    printf("\n\t \x1b[32m------ Reclamation %d ------\x1b[0m\n\n" , i);
-    printf("\t -- iD          : %d\n" , r.id);
-    printf("\t -- Client      : %s\n" , user[r.id_client].Nom);
-    printf("\t -- Motif       : %s\n" , r.Motif);
-    printf("\t -- Catgorie    : %s\n" , r.Categorie);
-    printf("\t -- Status      : %s\n" , r.Status);
-    printf("\t -- Description : %s\n" , r.Description);
-    printf("\t -- Note        : %s\n" , r.Note);
-    printf("\t -- Date        : %s\n" , r.date);
+    printf("\n\t\t\t\t\t\t  \x1b[32m------ Reclamation %d ------\x1b[0m\n\n" , i);
+    printf("\t\t\t\t\t\t  -- iD          : %d\n" , r.id);
+    printf("\t\t\t\t\t\t  -- Client      : %s\n" , user[r.id_client].Nom);
+    printf("\t\t\t\t\t\t  -- Motif       : %s\n" , r.Motif);
+    printf("\t\t\t\t\t\t  -- Catgorie    : %s\n" , r.Categorie);
+    printf("\t\t\t\t\t\t  -- Status      : %s\n" , r.Status);
+    printf("\t\t\t\t\t\t  -- Description : %s\n" , r.Description);
+    printf("\t\t\t\t\t\t  -- Note        : %s\n" , r.Note);
+    printf("\t\t\t\t\t\t  -- Date        : %s\n" , r.date);
 }
 
 int Ajouter_un_Reclamation(){
@@ -729,11 +730,11 @@ int Ajouter_un_Reclamation(){
     rec = realloc(rec , (R_Taille + 1)*sizeof(Reclamation));
 
     if(rec == NULL){
-        printf("\n\t \x1b[31m--- Erreur D'allocation ----\x1b[0m\n");
+        printf("\n\t\t\t\t\t\t  \x1b[31m--- Erreur D'allocation ----\x1b[0m\n");
         return 0;
     }
     
-    printf("\n\t \x1b[32m---- Ajouter un Reclamation ----\x1b[0m \n");
+    printf("\n\t\t\t\t\t\t  \x1b[32m---- Ajouter un Reclamation ----\x1b[0m \n");
  
     // generer L'id ----------- 
     srand(time(0));
@@ -755,7 +756,7 @@ int Ajouter_un_Reclamation(){
     // Validation de motif -------
     int Motif_count = 0;
     while(1){
-        printf("\n\t -- Le Motif de la Reclamation : ");
+        printf("\n\t\t\t\t\t\t  -- Le Motif de la Reclamation : ");
         int valide_input = scanf(" %[^\n]s" , rec[R_Taille].Motif);
 
         if(valide_input && strlen(rec[R_Taille].Motif) > 3){
@@ -764,14 +765,14 @@ int Ajouter_un_Reclamation(){
             return 0;
         }else{
             Motif_count++;
-            printf("\n\t \x1b[31m-- Invalid Motif --\x1b[0m \n");
+            printf("\n\t\t\t\t\t\t  \x1b[31m-- Invalid Motif --\x1b[0m \n");
         }
     }
 
     // Validation de description -------
     int Description_count = 0;
     while(1){
-        printf("\n\t -- La Description de la Reclamation : ");
+        printf("\n\t\t\t\t\t\t  -- La Description de la Reclamation : ");
         int valide_input = scanf(" %[^\n]s" , rec[R_Taille].Description);
 
         if(valide_input && strlen(rec[R_Taille].Description) > 3){
@@ -780,7 +781,7 @@ int Ajouter_un_Reclamation(){
             return 0;
         }else{
             Description_count++;
-            printf("\n\t \x1b[31m-- Invalid Description --\x1b[0m \n");
+            printf("\n\t\t\t\t\t\t  \x1b[31m-- Invalid Description --\x1b[0m \n");
         }
     }
 
@@ -799,7 +800,7 @@ int Ajouter_un_Reclamation(){
     // Validation de Categorie -------
     int Categorie_count = 0;
     while(1){
-        printf("\n\t -- La Categorie de la Reclamation : ");
+        printf("\n\t\t\t\t\t\t  -- La Categorie de la Reclamation : ");
         int valide_input = scanf(" %[^\n]s" , rec[R_Taille].Categorie);
 
         if(valide_input && strlen(rec[R_Taille].Categorie) > 3){
@@ -808,22 +809,22 @@ int Ajouter_un_Reclamation(){
             return 0;
         }else{
             Categorie_count++;
-            printf("\n\t \x1b[31m-- Invalid Categorie --\x1b[0m \n");
+            printf("\n\t\t\t\t\t\t  \x1b[31m-- Invalid Categorie --\x1b[0m \n");
         }
     }
 
     // Validation de Status -------
     strcpy(rec[R_Taille].Status , "en attente");
-    strcpy(rec[R_Taille].Note , "");
+    strcpy(rec[R_Taille].Note,"");
 
     // Validation de La Date
     time_t t = time(NULL);
     struct tm tm = *localtime(&t);
 
     // La date de creation
-    strftime(rec[R_Taille].date, 100, "%d-%m-%Y %H", &tm);
+    strftime(rec[R_Taille].date, 100 , "%d-%m-%Y %H", &tm);
     rec[R_Taille].heure_de_debut = time(NULL);
-
+    
     rec[R_Taille].differance = 0;
 
     // id_clien
@@ -840,7 +841,7 @@ int Modifier_un_Reclamation(){
     while(1){
         int id;
         bool exist = false;
-        printf("\n\t -- Veuillez Saisir Le identification de Reclamation : ");
+        printf("\n\t\t\t\t\t\t  -- Veuillez Saisir Le identification de Reclamation : ");
         scanf("%d" , &id);
         while(getchar() != '\n');
 
@@ -857,10 +858,10 @@ int Modifier_un_Reclamation(){
         }else if( mod_count > 2 ) {
             return 0;
         }else if (exist == false) {
-            printf("\n\t \x1b[33m--- Reclamation avec cette identification n'est pas exist ----\x1b[0m \n");
+            printf("\n\t\t\t\t\t\t  \x1b[33m--- Reclamation avec cette identification n'est pas exist ----\x1b[0m \n");
             mod_count++;
         }else{
-            printf("\n\t \x1b[31m-- Invalid Id --\x1b[0m \n");
+            printf("\n\t\t\t\t\t\t  \x1b[31m-- Invalid Id --\x1b[0m \n");
             mod_count++;
         }
     }
@@ -868,17 +869,17 @@ int Modifier_un_Reclamation(){
 
     if (verifier_duree(rec[pos].heure_de_debut) && user[index_user].Role == 0){
 
-        printf("\n\t \x1b[33m !! Le Delai Pour La Modification Est Expire !! \x1b[0m\n");
+        printf("\n\t\t\t\t\t\t  \x1b[33m !! Le Delai Pour La Modification Est Expire !! \x1b[0m\n");
         return 0;
     }else{
 
-        printf("\n\t \x1b[32m---- Modifier un Reclamation ----\x1b[0m\n");
+        printf("\n\t\t\t\t\t\t  \x1b[32m---- Modifier un Reclamation ----\x1b[0m\n");
 
 
         // Validation de motif -------
         int Motif_count = 0;
         while(1){
-            printf("\n\t -- Le Motif de la Reclamation : ");
+            printf("\n\t\t\t\t\t\t  -- Le Motif de la Reclamation : ");
             int valide_input = scanf(" %[^\n]s" , rec[pos].Motif);
 
             if(valide_input && strlen(rec[pos].Motif) > 3){
@@ -887,14 +888,14 @@ int Modifier_un_Reclamation(){
                 return 0;
             }else{
                 Motif_count++;
-                printf("\n\t \x1b[31m-- Invalid Motif --\x1b[0m \n");
+                printf("\n\t\t\t\t\t\t  \x1b[31m-- Invalid Motif --\x1b[0m \n");
             }
         }
 
         // Validation de description -------
         int Description_count = 0;
         while(1){
-            printf("\n\t -- La Description de la Reclamation : ");
+            printf("\n\t\t\t\t\t\t  -- La Description de la Reclamation : ");
             int valide_input = scanf(" %[^\n]s" , rec[pos].Description);
 
             if(valide_input && strlen(rec[pos].Description) > 3){
@@ -903,7 +904,7 @@ int Modifier_un_Reclamation(){
                 return 0;
             }else{
                 Description_count++;
-                printf("\n\t \x1b[31m-- Invalid Description --\x1b[0m \n");
+                printf("\n\t\t\t\t\t\t  \x1b[31m-- Invalid Description --\x1b[0m \n");
             }
         }
 
@@ -923,7 +924,7 @@ int Modifier_un_Reclamation(){
         // Validation de Categorie -------
         int Categorie_count = 0;
         while(1){
-                printf("\n\t -- La Categorie de la Reclamation : ");
+                printf("\n\t\t\t\t\t\t  -- La Categorie de la Reclamation : ");
                 int valide_input = scanf(" %[^\n]s" , rec[pos].Categorie);
 
                 if(valide_input && strlen(rec[pos].Categorie) > 3){
@@ -932,11 +933,9 @@ int Modifier_un_Reclamation(){
                     return 0;
                 }else{
                     Categorie_count++;
-                    printf("\n\t \x1b[31m-- Invalid Categorie --\x1b[0m \n");
+                    printf("\n\t\t\t\t\t\t  \x1b[31m-- Invalid Categorie --\x1b[0m \n");
                 }
             }
-
-        printf("\n\t --- id client : %d \n" , rec[pos].id_client); 
 
         return 1;
     }
@@ -951,7 +950,7 @@ int Supprimer_un_Reclamation(){
     while(1){
         int id;
         bool exist = false;
-        printf("\n\t -- Veuillez Saisir Le identification de Reclamation : ");
+        printf("\n\t\t\t\t\t\t  -- Veuillez Saisir Le identification de Reclamation : ");
         scanf("%d" , &id);
         while(getchar() != '\n');
 
@@ -968,10 +967,10 @@ int Supprimer_un_Reclamation(){
         }else if( sup_coount > 2 ) {
             return 0;
         }else if (exist == false) {
-            printf("\n\t \x1b[33m--- Reclamation avec cette identification n'est pas exist ----\x1b[0m \n");
+            printf("\n\t\t\t\t\t\t  \x1b[33m--- Reclamation avec cette identification n'est pas exist ----\x1b[0m \n");
             sup_coount++;
         }else{
-            printf("\n\t \x1b[31m-- Invalid Id --\x1b[0m \n");
+            printf("\n\t\t\t\t\t\t  \x1b[31m-- Invalid Id --\x1b[0m \n");
             sup_coount++;
         }
     }
@@ -982,7 +981,7 @@ int Supprimer_un_Reclamation(){
 
     if (verifier_duree(rec[pos].heure_de_debut) && user[index_user].Role == 0){
 
-        printf("\n\t \x1b[33m !! Le Delai Pour La Suppression est Expire !! \x1b[0m\n");
+        printf("\n\t\t\t\t\t\t  \x1b[33m !! Le Delai Pour La Suppression est Expire !! \x1b[0m\n");
         return 0;
     }else{
 
@@ -1007,7 +1006,7 @@ int Modifier_Role_Utilisateur(){
 
         char Nom[20];
         bool exist = false;
-        printf("\n\t -- Veuillez Saisir Le Nom D'utilisateur : ");
+        printf("\n\t\t\t\t\t\t  -- Veuillez Saisir Le Nom D'utilisateur : ");
         scanf(" %[^\n]s" , Nom);
         while(getchar() != '\n');
 
@@ -1024,21 +1023,21 @@ int Modifier_Role_Utilisateur(){
         }else if( nom_count > 2 ) {
             return 0;
         }else if (exist == false) {
-            printf("\n\t \x1b[33m--- Utilisateur avec ce nom n'est pas exist ----\x1b[0m \n");
+            printf("\n\t\t\t\t\t\t  \x1b[33m--- Utilisateur avec ce nom n'est pas exist ----\x1b[0m \n");
             nom_count++;
         }else{
-            printf("\n\t \x1b[31m-- Invalid Id --\x1b[0m \n");
+            printf("\n\t\t\t\t\t\t  \x1b[31m-- Invalid Id --\x1b[0m \n");
             nom_count++;
         }
     }
 
 
     int role;
-    printf("\n\t ---- Role d'Utilisateur ----\n");
-    printf("\t -- 1. Administrateur.\n");
-    printf("\t -- 2. Agent de Reclamation.\n");
-    printf("\t -- 3. Client.\n");
-    printf("\t - Tapez Votre Choix : ");
+    printf("\n\t\t\t\t\t\t  ---- Role d'Utilisateur ----\n");
+    printf("\t\t\t\t\t\t  -- 1. Administrateur.\n");
+    printf("\t\t\t\t\t\t  -- 2. Agent de Reclamation.\n");
+    printf("\t\t\t\t\t\t  -- 3. Client.\n");
+    printf("\t\t\t\t\t\t  - Tapez Votre Choix : ");
     scanf("%d" , &role);
 
     if(role >=1 && role <= 3){
@@ -1059,7 +1058,7 @@ int Modifier_Status_Utilisateur(){
 
         int id;
         bool exist = false;
-        printf("\n\t -- Veuillez Saisir L'dentification de Reclamation : ");
+        printf("\n\t\t\t\t\t\t  -- Veuillez Saisir L'dentification de Reclamation : ");
         scanf("%d" , &id);
         while(getchar() != '\n');
 
@@ -1076,20 +1075,20 @@ int Modifier_Status_Utilisateur(){
         }else if( id_count > 2 ) {
             return 0;
         }else if (exist == false) {
-            printf("\n\t \x1b[33m--- Utilisateur avec ce nom n'est pas exist ----\x1b[0m \n");
+            printf("\n\t\t\t\t\t\t  \x1b[33m--- Utilisateur avec ce nom n'est pas exist ----\x1b[0m \n");
             id_count++;
         }else{
-            printf("\n\t \x1b[31m-- Invalid Id --\x1b[0m \n");
+            printf("\n\t\t\t\t\t\t  \x1b[31m-- Invalid Id --\x1b[0m \n");
             id_count++;
         }
     }
 
     int status;
-    printf("\n\t ---- Status de Reclamation ----\n");
-    printf("\t -- 1. en cours.\n");
-    printf("\t -- 2. Resolu.\n");
-    printf("\t -- 3. Rejeter.\n");
-    printf("\t - Tapez Votre Choix : ");
+    printf("\n\t\t\t\t\t\t  ---- Status de Reclamation ----\n");
+    printf("\t\t\t\t\t\t  -- 1. en cours.\n");
+    printf("\t\t\t\t\t\t  -- 2. Resolu.\n");
+    printf("\t\t\t\t\t\t  -- 3. Rejeter.\n");
+    printf("\t\t\t\t\t\t  - Tapez Votre Choix : ");
     scanf("%d" , &status);
 
     if(status >= 1 && status <= 3){
@@ -1109,14 +1108,14 @@ int Modifier_Status_Utilisateur(){
 
         char note[MAX_CHARACTERE];
         int  option = 0;
-        printf("\n\t -- voulez-vous Ajouter une Note : \n");
-        printf("\t -- 1. Oui.\n");
-        printf("\t -- 2. Non.\n");
-        printf("\t -- Taper Votre Choix : ");
+        printf("\n\t\t\t\t\t\t  -- voulez-vous Ajouter une Note : \n");
+        printf("\t\t\t\t\t\t  -- 1. Oui.\n");
+        printf("\t\t\t\t\t\t  -- 2. Non.\n");
+        printf("\t\t\t\t\t\t  -- Taper Votre Choix : ");
         scanf("%d" , &option);
 
         if(option == 1){
-            printf("\n\t -- Saisir La Note : ");
+            printf("\n\t\t\t\t\t\t  -- Saisir La Note : ");
             scanf(" %[^\n]s" , note);
             strcpy(rec[pos].Note , note);
         }
@@ -1150,18 +1149,18 @@ void Rechercher_Reclamation(){
     // Trouve L'dentification
     while(1){
 
-        printf("\n\t ----- Rechercher -------- \n");
-        printf("\t 1 - par identifiant.\n"); 
-        printf("\t 2 - par Nom du Client\n"); 
-        printf("\t 3 - par Status\n"); 
-        printf("\t 0 - Menu Priincipale.\n"); 
-        printf("\t\t => ");
+        printf("\n\t\t\t\t\t\t  ----- Rechercher -------- \n");
+        printf("\t\t\t\t\t\t  1 - par identifiant.\n"); 
+        printf("\t\t\t\t\t\t  2 - par Nom du Client\n"); 
+        printf("\t\t\t\t\t\t  3 - par Status\n"); 
+        printf("\t\t\t\t\t\t  0 - Menu Priincipale.\n"); 
+        printf("\t\t\t\t\t\t  => ");
 
         int valid_choix = scanf("%d" , &chx);
         while(getchar() != '\n');
 
             if (valid_choix != 1) {
-                printf("\n\t\t\033[31m ------ Choix Invalide ------ \033[0m\n");
+                printf("\n\t\t\t\t\t\t \033[31m ------ Choix Invalide ------ \033[0m\n");
                 continue;
             }else{
                 break;
@@ -1172,7 +1171,7 @@ void Rechercher_Reclamation(){
     if(chx == 1){
 
         int id;
-        printf("\n\t Saisie L'dentifiant de Reclamation: ");
+        printf("\n\t\t\t\t\t\t  Saisie L'dentifiant de Reclamation: ");
         scanf("%d" , &id);
 
         for(i=0;i<R_Taille;i++){
@@ -1183,12 +1182,12 @@ void Rechercher_Reclamation(){
             }
         }
 
-        if(exist) printf("\n\t \033[31m --- L'identifiant n'est pas exist ----- \033[0m\n");
+        if(exist) printf("\n\t\t\t\t\t\t  \033[31m --- L'identifiant n'est pas exist ----- \033[0m\n");
 
     // Rechercher par nom du client
     }else if(chx == 2){
 
-        printf("\n\t Saisie Le Nom du Client : ");
+        printf("\n\t\t\t\t\t\t  Saisie Le Nom du Client : ");
         scanf(" %[^\n]s" , Nom);
 
         for(i=0;i<Taille;i++){
@@ -1204,7 +1203,7 @@ void Rechercher_Reclamation(){
         }
 
         if(exist) {
-            printf("\n\t \033[31m --- Le Nom du Client n'est pas exist -----\033[0m\n");
+            printf("\n\t\t\t\t\t\t  \033[31m --- Le Nom du Client n'est pas exist -----\033[0m\n");
             return;
         }
 
@@ -1212,11 +1211,11 @@ void Rechercher_Reclamation(){
     }else if(chx == 3){
 
         int status , existe = 1;
-        printf("\n\t ---- Status de Reclamation ----\n");
-        printf("\t -- 1. en cours.\n");
-        printf("\t -- 2. Resolu.\n");
-        printf("\t -- 3. Rejeter.\n");
-        printf("\t - Tapez Votre Choix : ");
+        printf("\n\t\t\t\t\t\t  ---- Status de Reclamation ----\n");
+        printf("\t\t\t\t\t\t  -- 1. en cours.\n");
+        printf("\t\t\t\t\t\t  -- 2. Resolu.\n");
+        printf("\t\t\t\t\t\t  -- 3. Rejeter.\n");
+        printf("\t\t\t\t\t\t  - Tapez Votre Choix : ");
         scanf("%d" , &status);
 
 
@@ -1228,7 +1227,7 @@ void Rechercher_Reclamation(){
                 }
             }
 
-            if(existe) printf("\n\t\t\033[31m !! Aucun Reclamation 'en cours' a afficher !! \033[0m\n");
+            if(existe) printf("\n\t\t\t\t\t\t \033[31m !! Aucun Reclamation 'en cours' a afficher !! \033[0m\n");
 
         } 
         else if (status == 2){
@@ -1239,7 +1238,7 @@ void Rechercher_Reclamation(){
                 }
             }
 
-            if(existe) printf("\n\t\t\033[31m !! Aucun Reclamation 'Resolu' a afficher !! \033[0m\n");
+            if(existe) printf("\n\t\t\t\t\t\t \033[31m !! Aucun Reclamation 'Resolu' a afficher !! \033[0m\n");
         }
         else if ( status == 3){
             for(i=0;i<R_Taille;i++){
@@ -1248,16 +1247,16 @@ void Rechercher_Reclamation(){
                     existe = 0;
                 }
             }
-            if(existe) printf("\n\t\t\033[31m !! Aucun Reclamation 'Rejeter' a afficher !! \033[0m\n");
+            if(existe) printf("\n\t\t\t\t\t\t \033[31m !! Aucun Reclamation 'Rejeter' a afficher !! \033[0m\n");
         }else{
-            printf("\n\t\t\033[31m ------ Choix Invalide ------ \033[0m\n");
+            printf("\n\t\t\t\t\t\t \033[31m ------ Choix Invalide ------ \033[0m\n");
             return;
         }
 
     }else if(chx == 0){
         return; 
     }else {
-        printf("\n\t\t\033[31m ------ Choix Invalide ------ \033[0m\n");
+        printf("\n\t\t\t\t\t\t \033[31m ------ Choix Invalide ------ \033[0m\n");
         return;
     }
 
@@ -1271,8 +1270,8 @@ void Statistiques_Rapport(){
     int total_resolu_aujourdoui = 0;
     int differance_total = 0;
     int taux_resolution = 0, moyenne_traitement = 0;
-    int i;
     time_t date = time(NULL);
+    int i;
     
 
     if (nombre_total > 0) {
@@ -1318,13 +1317,13 @@ void Statistiques_Rapport(){
     }
 
 
-    printf(BLUE"+-----------------------------------------------------------------------------------------------+\n"RESET);
-    printf("|                                      STATISTIQUES                                             |\n"RESET);
-    printf(BLUE"+-----------------------------------------------------------------------------------------------+\n"RESET);
-    printf("| \x1b[37mTOTAL DE RECLAMATIONS        |   RESOLUTION DES RECLAMATIONS |  DELAI MOYEN DE TRAITEMENT\x1b[0m     |\n");
-    printf(BLUE"+------------------------------+-------------------------------+--------------------------------+\n"RESET);
-    printf("|           \x1b[37m%d                  |               %d%            |          %d seconde \x1b[0m           |\n", nombre_total, taux_resolution, moyenne_traitement); 
-    printf(BLUE"+------------------------------+-------------------------------+--------------------------------+\n"RESET);
+    printf("\t\t\t\t\t+-----------------------------------------------------------------------------------------------+\n");
+    printf("\t\t\t\t\t|                                      STATISTIQUES                                             |\n");
+    printf("\t\t\t\t\t+-----------------------------------------------------------------------------------------------+\n");
+    printf("\t\t\t\t\t| \x1b[37mTOTAL DE RECLAMATIONS        |   RESOLUTION DES RECLAMATIONS |  DELAI MOYEN DE TRAITEMENT\x1b[0m     |\n");
+    printf("\t\t\t\t\t+------------------------------+-------------------------------+--------------------------------+\n");
+    printf("\t\t\t\t\t|           \x1b[37m%d                  |               %d%            |          %d seconde \x1b[0m           |\n", nombre_total, taux_resolution, moyenne_traitement); 
+    printf("\t\t\t\t\t+------------------------------+-------------------------------+--------------------------------+\n");
 
 
 
@@ -1384,7 +1383,7 @@ void Recuperation() {
     fseek(users_file, 0, SEEK_END);
     long taille_user = ftell(users_file);
     if (taille_user < 0) {
-        printf(RED "\n\t --- Erreur --- \n" RESET);
+        printf(RED "\n\t\t\t\t\t\t  --- Erreur --- \n" RESET);
         fclose(users_file);
         return;
     }
@@ -1394,7 +1393,7 @@ void Recuperation() {
     fseek(rec_file, 0, SEEK_END);
     long taille_rec = ftell(rec_file);
     if (taille_rec < 0) {
-        perror(RED "\n\t --- Erreur " RESET);
+        perror(RED "\n\t\t\t\t\t\t  --- Erreur " RESET);
         fclose(rec_file);
         return;
     }
@@ -1410,7 +1409,7 @@ void Recuperation() {
     rec = (Reclamation *)calloc(R_Taille, sizeof(Reclamation));
 
     if (user == NULL || rec == NULL) {
-        perror(RED "\n\t --- Erreur " RESET);
+        perror(RED "\n\t\t\t\t\t\t  --- Erreur " RESET);
         fclose(users_file);
         fclose(rec_file);
     }
@@ -1419,7 +1418,7 @@ void Recuperation() {
     size_t recLus = fread(rec, sizeof(Reclamation), R_Taille, rec_file);
 
     if (userLus != Taille  || recLus != R_Taille) {
-        perror(RED "\n\t --- Erreur " RESET);
+        perror(RED "\n\t\t\t\t\t\t  --- Erreur " RESET);
         free(user);
         free(rec);
         fclose(users_file);
@@ -1439,7 +1438,7 @@ int Enregistrement() {
     FILE *rec_file = fopen("Reclamations.bin", "wb");
 
     if (users_file == NULL || rec_file == NULL) {
-        printf("\n\t\033[31m ---- Erreur a l'ouverture du fichier ---- \033[0m\n");
+        printf("\n\t\t\t\t\t\t \033[31m ---- Erreur a l'ouverture du fichier ---- \033[0m\n");
         return 1;
     }
 
@@ -1447,14 +1446,14 @@ int Enregistrement() {
     size_t valid_rec = fwrite(rec, sizeof(Reclamation), R_Taille, rec_file);
 
     if (valid_user != Taille || valid_rec != R_Taille){
-        printf("\n\t\033[31m ---- Erreur à l'ecriture dans le fichier ---- \033[0m\n");
+        printf("\n\t\t\t\t\t\t \033[31m ---- Erreur à l'ecriture dans le fichier ---- \033[0m\n");
         fclose(users_file);
         fclose(rec_file);
         return 1; 
     }
 
     if (fclose(users_file) != 0 || fclose(rec_file) != 0) {
-        printf("\n\t\033[31m ---- Erreur a La Fermeture du fichier ---- \033[0m\n");
+        printf("\n\t\t\t\t\t\t \033[31m ---- Erreur a La Fermeture du fichier ---- \033[0m\n");
         return 1;
     }
 
