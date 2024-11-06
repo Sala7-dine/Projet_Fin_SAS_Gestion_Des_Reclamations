@@ -1,4 +1,3 @@
-[![wakatime](https://wakatime.com/badge/github/Sala7-dine/Projet_Fin_SAS_Gestion_Des_Reclamations.svg)](https://wakatime.com/badge/github/Sala7-dine/Projet_Fin_SAS_Gestion_Des_Reclamations)
 # 📁 Projet SAS : Gestion des Réclamations 📋
  
 ## 🌟 Introduction
